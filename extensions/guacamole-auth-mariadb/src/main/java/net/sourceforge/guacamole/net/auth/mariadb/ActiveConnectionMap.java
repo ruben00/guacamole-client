@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package net.sourceforge.guacamole.net.auth.mariaDB;
+package net.sourceforge.guacamole.net.auth.MariaDB;
 
 
 import com.google.inject.Inject;
@@ -29,8 +29,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import org.glyptodon.guacamole.GuacamoleException;
-import net.sourceforge.guacamole.net.auth.mariaDB.dao.ConnectionHistoryMapper;
-import net.sourceforge.guacamole.net.auth.mariaDB.model.ConnectionHistory;
+import net.sourceforge.guacamole.net.auth.mariadb.dao.ConnectionHistoryMapper;
+import net.sourceforge.guacamole.net.auth.mariadb.model.ConnectionHistory;
 import org.glyptodon.guacamole.GuacamoleResourceNotFoundException;
 
 /**
@@ -44,12 +44,12 @@ import org.glyptodon.guacamole.GuacamoleResourceNotFoundException;
 public class ActiveConnectionMap {
     
     /**
-     * Represents the count of users currently using a mariaDB connection.
+     * Represents the count of users currently using a MariaDB connection.
      */
     public class Connection {
         
         /**
-         * The ID of the mariaDB connection that this Connection represents.
+         * The ID of the MariaDB connection that this Connection represents.
          */
         private int connectionID;
         
@@ -59,10 +59,10 @@ public class ActiveConnectionMap {
         private int currentUserCount;
         
         /**
-         * Returns the ID of the mariaDB connection that this Connection 
+         * Returns the ID of the MariaDB connection that this Connection 
          * represents.
          * 
-         * @return the ID of the mariaDB connection that this Connection 
+         * @return the ID of the MariaDB connection that this Connection 
          * represents.
          */
         public int getConnectionID() {
@@ -91,7 +91,7 @@ public class ActiveConnectionMap {
          * Create a new Connection for the given connectionID with a zero
          * current user count.
          * 
-         * @param connectionID The ID of the mariaDB connection that this 
+         * @param connectionID The ID of the MariaDB connection that this 
          *                     Connection represents.
          */
         public Connection(int connectionID) {
@@ -387,7 +387,7 @@ public class ActiveConnectionMap {
     /**
      * Decrement the current user count for this Connection.
      * 
-     * @param connectionID The ID of the mariaDB connection that this 
+     * @param connectionID The ID of the MariaDB connection that this 
      *                     Connection represents.
      * 
      * @throws GuacamoleException If the connection is not found.
@@ -407,7 +407,7 @@ public class ActiveConnectionMap {
     /**
      * Increment the current user count for this Connection.
      * 
-     * @param connectionID The ID of the mariaDB connection that this 
+     * @param connectionID The ID of the MariaDB connection that this 
      *                     Connection represents.
      * 
      * @throws GuacamoleException If the connection is not found.

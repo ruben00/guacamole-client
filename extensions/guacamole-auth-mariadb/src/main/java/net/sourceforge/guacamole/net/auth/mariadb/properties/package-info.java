@@ -21,8 +21,8 @@
  */
 
 /**
- * Properties which control the configuration of the mariaDB authentication
+ * Properties which control the configuration of the MariaDB authentication
  * provider.
  */
-package net.sourceforge.guacamole.net.auth.mariaDB.properties;
+package net.sourceforge.guacamole.net.auth.mariadb.properties;
 

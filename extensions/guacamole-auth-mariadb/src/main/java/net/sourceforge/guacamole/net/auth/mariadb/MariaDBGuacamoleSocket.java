@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package net.sourceforge.guacamole.net.auth.mariaDB;
+package net.sourceforge.guacamole.net.auth.MariaDB;
 
 
 import com.google.inject.Inject;
@@ -30,10 +30,10 @@ import org.glyptodon.guacamole.io.GuacamoleWriter;
 import org.glyptodon.guacamole.net.GuacamoleSocket;
 
 /**
- * A mariaDB specific wrapper around a ConfiguredGuacamoleSocket.
+ * A MariaDB specific wrapper around a ConfiguredGuacamoleSocket.
  * @author James Muehlner
  */
-public class mariaDBGuacamoleSocket implements GuacamoleSocket {
+public class MariaDBGuacamoleSocket implements GuacamoleSocket {
 
     /**
      * Injected ActiveConnectionMap which will contain all active connections.
@@ -59,7 +59,7 @@ public class mariaDBGuacamoleSocket implements GuacamoleSocket {
     private Integer connectionGroupID;
 
     /**
-     * Initialize this mariaDBGuacamoleSocket with the provided GuacamoleSocket.
+     * Initialize this MariaDBGuacamoleSocket with the provided GuacamoleSocket.
      *
      * @param socket The ConfiguredGuacamoleSocket to wrap.
      * @param historyID The ID of the history record associated with this

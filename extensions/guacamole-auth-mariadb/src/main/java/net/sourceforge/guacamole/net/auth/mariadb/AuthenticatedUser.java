@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package net.sourceforge.guacamole.net.auth.mariaDB;
+package net.sourceforge.guacamole.net.auth.MariaDB;
 
 import org.glyptodon.guacamole.net.auth.Credentials;
 

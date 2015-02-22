@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package net.sourceforge.guacamole.net.auth.mariaDB;
+package net.sourceforge.guacamole.net.auth.MariaDB;
 
 
 import com.google.inject.Inject;
@@ -31,15 +31,15 @@ import org.glyptodon.guacamole.GuacamoleException;
 import org.glyptodon.guacamole.net.GuacamoleSocket;
 import org.glyptodon.guacamole.net.auth.AbstractConnection;
 import org.glyptodon.guacamole.net.auth.ConnectionRecord;
-import net.sourceforge.guacamole.net.auth.mariaDB.service.ConnectionService;
+import net.sourceforge.guacamole.net.auth.mariadb.service.ConnectionService;
 import org.glyptodon.guacamole.protocol.GuacamoleClientInformation;
 import org.glyptodon.guacamole.protocol.GuacamoleConfiguration;
 
 /**
- * A mariaDB based implementation of the Connection object.
+ * A MariaDB based implementation of the Connection object.
  * @author James Muehlner
  */
-public class mariaDBConnection extends AbstractConnection {
+public class MariaDBConnection extends AbstractConnection {
 
     /**
      * The ID associated with this connection in the database.
@@ -70,7 +70,7 @@ public class mariaDBConnection extends AbstractConnection {
     /**
      * Create a default, empty connection.
      */
-    public mariaDBConnection() {
+    public MariaDBConnection() {
     }
 
     /**
@@ -108,7 +108,7 @@ public class mariaDBConnection extends AbstractConnection {
         if (parentID != null)
             this.setParentIdentifier(String.valueOf(parentID));
         else
-            this.setParentIdentifier(mariaDBConstants.CONNECTION_GROUP_ROOT_IDENTIFIER);
+            this.setParentIdentifier(MariaDBConstants.CONNECTION_GROUP_ROOT_IDENTIFIER);
 
     }
 

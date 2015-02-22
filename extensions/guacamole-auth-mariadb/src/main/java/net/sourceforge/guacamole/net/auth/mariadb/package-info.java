@@ -21,8 +21,8 @@
  */
 
 /**
- * Base classes which support the mariaDB authentication provider, including
+ * Base classes which support the MariaDB authentication provider, including
  * the authentication provider itself.
  */
-package net.sourceforge.guacamole.net.auth.mariaDB;
+package net.sourceforge.guacamole.net.auth.MariaDB;
 

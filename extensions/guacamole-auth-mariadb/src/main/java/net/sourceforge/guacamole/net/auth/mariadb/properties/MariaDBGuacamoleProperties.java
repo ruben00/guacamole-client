@@ -20,90 +20,90 @@
  * THE SOFTWARE.
  */
 
-package net.sourceforge.guacamole.net.auth.mariaDB.properties;
+package net.sourceforge.guacamole.net.auth.mariadb.properties;
 
 import org.glyptodon.guacamole.properties.BooleanGuacamoleProperty;
 import org.glyptodon.guacamole.properties.IntegerGuacamoleProperty;
 import org.glyptodon.guacamole.properties.StringGuacamoleProperty;
 
 /**
- * Properties used by the mariaDB Authentication plugin.
+ * Properties used by the MariaDB Authentication plugin.
  * @author James Muehlner
  */
-public class mariaDBGuacamoleProperties {
+public class MariaDBGuacamoleProperties {
 
     /**
      * This class should not be instantiated.
      */
-    private mariaDBGuacamoleProperties() {}
+    private MariaDBGuacamoleProperties() {}
 
     /**
-     * The URL of the mariaDB server hosting the guacamole authentication tables.
+     * The URL of the MariaDB server hosting the guacamole authentication tables.
      */
-    public static final StringGuacamoleProperty mariaDB_HOSTNAME = new StringGuacamoleProperty() {
+    public static final StringGuacamoleProperty MariaDB_HOSTNAME = new StringGuacamoleProperty() {
 
         @Override
-        public String getName() { return "mariaDB-hostname"; }
+        public String getName() { return "MariaDB-hostname"; }
 
     };
 
     /**
-     * The port of the mariaDB server hosting the guacamole authentication tables.
+     * The port of the MariaDB server hosting the guacamole authentication tables.
      */
-    public static final IntegerGuacamoleProperty mariaDB_PORT = new IntegerGuacamoleProperty() {
+    public static final IntegerGuacamoleProperty MariaDB_PORT = new IntegerGuacamoleProperty() {
 
         @Override
-        public String getName() { return "mariaDB-port"; }
+        public String getName() { return "MariaDB-port"; }
 
     };
 
     /**
-     * The name of the mariaDB database containing the guacamole authentication tables.
+     * The name of the MariaDB database containing the guacamole authentication tables.
      */
-    public static final StringGuacamoleProperty mariaDB_DATABASE = new StringGuacamoleProperty() {
+    public static final StringGuacamoleProperty MariaDB_DATABASE = new StringGuacamoleProperty() {
 
         @Override
-        public String getName() { return "mariaDB-database"; }
+        public String getName() { return "MariaDB-database"; }
 
     };
 
     /**
-     * The username used to authenticate to the mariaDB database containing the guacamole authentication tables.
+     * The username used to authenticate to the MariaDB database containing the guacamole authentication tables.
      */
-    public static final StringGuacamoleProperty mariaDB_USERNAME = new StringGuacamoleProperty() {
+    public static final StringGuacamoleProperty MariaDB_USERNAME = new StringGuacamoleProperty() {
 
         @Override
-        public String getName() { return "mariaDB-username"; }
+        public String getName() { return "MariaDB-username"; }
 
     };
 
     /**
-     * The password used to authenticate to the mariaDB database containing the guacamole authentication tables.
+     * The password used to authenticate to the MariaDB database containing the guacamole authentication tables.
      */
-    public static final StringGuacamoleProperty mariaDB_PASSWORD = new StringGuacamoleProperty() {
+    public static final StringGuacamoleProperty MariaDB_PASSWORD = new StringGuacamoleProperty() {
 
         @Override
-        public String getName() { return "mariaDB-password"; }
+        public String getName() { return "MariaDB-password"; }
 
     };
 
     /**
      * Whether or not multiple users accessing the same connection at the same time should be disallowed.
      */
-    public static final BooleanGuacamoleProperty mariaDB_DISALLOW_SIMULTANEOUS_CONNECTIONS = new BooleanGuacamoleProperty() {
+    public static final BooleanGuacamoleProperty MariaDB_DISALLOW_SIMULTANEOUS_CONNECTIONS = new BooleanGuacamoleProperty() {
 
         @Override
-        public String getName() { return "mariaDB-disallow-simultaneous-connections"; }
+        public String getName() { return "MariaDB-disallow-simultaneous-connections"; }
 
     };
 
     /**
      * Whether or not the same user accessing the same connection or connection group at the same time should be disallowed.
      */
-    public static final BooleanGuacamoleProperty mariaDB_DISALLOW_DUPLICATE_CONNECTIONS = new BooleanGuacamoleProperty() {
+    public static final BooleanGuacamoleProperty MariaDB_DISALLOW_DUPLICATE_CONNECTIONS = new BooleanGuacamoleProperty() {
 
         @Override
-        public String getName() { return "mariaDB-disallow-duplicate-connections"; }
+        public String getName() { return "MariaDB-disallow-duplicate-connections"; }
 
     };
     

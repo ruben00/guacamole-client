@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package net.sourceforge.guacamole.net.auth.mariaDB;
+package net.sourceforge.guacamole.net.auth.MariaDB;
 
 
 import com.google.inject.Inject;
@@ -29,21 +29,21 @@ import org.glyptodon.guacamole.GuacamoleClientException;
 import org.glyptodon.guacamole.GuacamoleException;
 import org.glyptodon.guacamole.net.auth.Connection;
 import org.glyptodon.guacamole.net.auth.Directory;
-import net.sourceforge.guacamole.net.auth.mariaDB.dao.ConnectionParameterMapper;
-import net.sourceforge.guacamole.net.auth.mariaDB.dao.ConnectionPermissionMapper;
-import net.sourceforge.guacamole.net.auth.mariaDB.model.ConnectionParameter;
-import net.sourceforge.guacamole.net.auth.mariaDB.model.ConnectionParameterExample;
-import net.sourceforge.guacamole.net.auth.mariaDB.model.ConnectionPermissionKey;
-import net.sourceforge.guacamole.net.auth.mariaDB.service.ConnectionGroupService;
-import net.sourceforge.guacamole.net.auth.mariaDB.service.ConnectionService;
-import net.sourceforge.guacamole.net.auth.mariaDB.service.PermissionCheckService;
+import net.sourceforge.guacamole.net.auth.mariadb.dao.ConnectionParameterMapper;
+import net.sourceforge.guacamole.net.auth.mariadb.dao.ConnectionPermissionMapper;
+import net.sourceforge.guacamole.net.auth.mariadb.model.ConnectionParameter;
+import net.sourceforge.guacamole.net.auth.mariadb.model.ConnectionParameterExample;
+import net.sourceforge.guacamole.net.auth.mariadb.model.ConnectionPermissionKey;
+import net.sourceforge.guacamole.net.auth.mariadb.service.ConnectionGroupService;
+import net.sourceforge.guacamole.net.auth.mariadb.service.ConnectionService;
+import net.sourceforge.guacamole.net.auth.mariadb.service.PermissionCheckService;
 import org.glyptodon.guacamole.GuacamoleResourceNotFoundException;
 import org.glyptodon.guacamole.GuacamoleUnsupportedException;
 import org.glyptodon.guacamole.protocol.GuacamoleConfiguration;
 import org.mybatis.guice.transactional.Transactional;
 
 /**
- * A mariaDB-based implementation of the connection directory.
+ * A MariaDB-based implementation of the connection directory.
  *
  * @author James Muehlner
  */
@@ -109,7 +109,7 @@ public class ConnectionDirectory implements Directory<String, Connection>{
     public Connection get(String identifier) throws GuacamoleException {
 
         // Get connection
-        mariaDBConnection connection =
+        MariaDBConnection connection =
                 connectionService.retrieveConnection(identifier, currentUser);
         
         if(connection == null)
@@ -117,13 +117,13 @@ public class ConnectionDirectory implements Directory<String, Connection>{
         
         // Verify permission to use the parent connection group for organizational purposes
         permissionCheckService.verifyConnectionGroupUsageAccess
-                (connection.getParentID(), currentUser, mariaDBConstants.CONNECTION_GROUP_ORGANIZATIONAL);
+                (connection.getParentID(), currentUser, MariaDBConstants.CONNECTION_GROUP_ORGANIZATIONAL);
 
         // Verify access is granted
         permissionCheckService.verifyConnectionAccess(
                 currentUser,
                 connection.getConnectionID(),
-                mariaDBConstants.CONNECTION_READ);
+                MariaDBConstants.CONNECTION_READ);
 
         // Return connection
         return connection;
@@ -136,10 +136,10 @@ public class ConnectionDirectory implements Directory<String, Connection>{
         
         // Verify permission to use the connection group for organizational purposes
         permissionCheckService.verifyConnectionGroupUsageAccess
-                (parentID, currentUser, mariaDBConstants.CONNECTION_GROUP_ORGANIZATIONAL);
+                (parentID, currentUser, MariaDBConstants.CONNECTION_GROUP_ORGANIZATIONAL);
         
         return permissionCheckService.retrieveConnectionIdentifiers(currentUser, 
-                parentID, mariaDBConstants.CONNECTION_READ);
+                parentID, MariaDBConstants.CONNECTION_READ);
     }
 
     @Transactional
@@ -152,24 +152,24 @@ public class ConnectionDirectory implements Directory<String, Connection>{
         
         // Verify permission to create
         permissionCheckService.verifySystemAccess(currentUser,
-                mariaDBConstants.SYSTEM_CONNECTION_CREATE);
+                MariaDBConstants.SYSTEM_CONNECTION_CREATE);
         
         // Verify permission to edit the connection group
         permissionCheckService.verifyConnectionGroupAccess(currentUser, 
-                this.parentID, mariaDBConstants.CONNECTION_GROUP_UPDATE);
+                this.parentID, MariaDBConstants.CONNECTION_GROUP_UPDATE);
         
         // Verify permission to use the connection group for organizational purposes
         permissionCheckService.verifyConnectionGroupUsageAccess
-                (parentID, currentUser, mariaDBConstants.CONNECTION_GROUP_ORGANIZATIONAL);
+                (parentID, currentUser, MariaDBConstants.CONNECTION_GROUP_ORGANIZATIONAL);
 
         // Verify that no connection already exists with this name.
-        mariaDBConnection previousConnection =
+        MariaDBConnection previousConnection =
                 connectionService.retrieveConnection(name, parentID, currentUser);
         if(previousConnection != null)
             throw new GuacamoleClientException("That connection name is already in use.");
 
         // Create connection
-        mariaDBConnection connection = connectionService.createConnection(
+        MariaDBConnection connection = connectionService.createConnection(
                 name, object.getConfiguration().getProtocol(), currentUser, parentID);
         
         // Set the connection ID
@@ -186,19 +186,19 @@ public class ConnectionDirectory implements Directory<String, Connection>{
         newConnectionPermission.setConnection_id(connection.getConnectionID());
 
         // Read permission
-        newConnectionPermission.setPermission(mariaDBConstants.CONNECTION_READ);
+        newConnectionPermission.setPermission(MariaDBConstants.CONNECTION_READ);
         connectionPermissionDAO.insert(newConnectionPermission);
 
         // Update permission
-        newConnectionPermission.setPermission(mariaDBConstants.CONNECTION_UPDATE);
+        newConnectionPermission.setPermission(MariaDBConstants.CONNECTION_UPDATE);
         connectionPermissionDAO.insert(newConnectionPermission);
 
         // Delete permission
-        newConnectionPermission.setPermission(mariaDBConstants.CONNECTION_DELETE);
+        newConnectionPermission.setPermission(MariaDBConstants.CONNECTION_DELETE);
         connectionPermissionDAO.insert(newConnectionPermission);
 
         // Administer permission
-        newConnectionPermission.setPermission(mariaDBConstants.CONNECTION_ADMINISTER);
+        newConnectionPermission.setPermission(MariaDBConstants.CONNECTION_ADMINISTER);
         connectionPermissionDAO.insert(newConnectionPermission);
 
     }
@@ -235,26 +235,26 @@ public class ConnectionDirectory implements Directory<String, Connection>{
 
         // If connection not actually from this auth provider, we can't handle
         // the update
-        if (!(object instanceof mariaDBConnection))
+        if (!(object instanceof MariaDBConnection))
             throw new GuacamoleUnsupportedException("Connection not from database.");
 
-        mariaDBConnection mariaDBConnection = (mariaDBConnection) object;
+        MariaDBConnection MariaDBConnection = (MariaDBConnection) object;
 
         // Verify permission to update
         permissionCheckService.verifyConnectionAccess(currentUser,
-                mariaDBConnection.getConnectionID(),
-                mariaDBConstants.CONNECTION_UPDATE);
+                MariaDBConnection.getConnectionID(),
+                MariaDBConstants.CONNECTION_UPDATE);
 
         // Perform update
-        connectionService.updateConnection(mariaDBConnection);
+        connectionService.updateConnection(MariaDBConnection);
 
         // Delete old connection parameters
         ConnectionParameterExample parameterExample = new ConnectionParameterExample();
-        parameterExample.createCriteria().andConnection_idEqualTo(mariaDBConnection.getConnectionID());
+        parameterExample.createCriteria().andConnection_idEqualTo(MariaDBConnection.getConnectionID());
         connectionParameterDAO.deleteByExample(parameterExample);
 
         // Add connection parameters
-        createConfigurationValues(mariaDBConnection.getConnectionID(),
+        createConfigurationValues(MariaDBConnection.getConnectionID(),
                 object.getConfiguration());
 
     }
@@ -264,23 +264,23 @@ public class ConnectionDirectory implements Directory<String, Connection>{
     public void remove(String identifier) throws GuacamoleException {
 
         // Get connection
-        mariaDBConnection mariaDBConnection =
+        MariaDBConnection MariaDBConnection =
                 connectionService.retrieveConnection(identifier, currentUser);
         
-        if(mariaDBConnection == null)
+        if(MariaDBConnection == null)
             throw new GuacamoleResourceNotFoundException("Connection not found.");
         
         // Verify permission to use the parent connection group for organizational purposes
         permissionCheckService.verifyConnectionGroupUsageAccess
-                (mariaDBConnection.getParentID(), currentUser, mariaDBConstants.CONNECTION_GROUP_ORGANIZATIONAL);
+                (MariaDBConnection.getParentID(), currentUser, MariaDBConstants.CONNECTION_GROUP_ORGANIZATIONAL);
 
         // Verify permission to delete
         permissionCheckService.verifyConnectionAccess(currentUser,
-                mariaDBConnection.getConnectionID(),
-                mariaDBConstants.CONNECTION_DELETE);
+                MariaDBConnection.getConnectionID(),
+                MariaDBConstants.CONNECTION_DELETE);
 
         // Delete the connection itself
-        connectionService.deleteConnection(mariaDBConnection.getConnectionID());
+        connectionService.deleteConnection(MariaDBConnection.getConnectionID());
 
     }
 
@@ -294,43 +294,43 @@ public class ConnectionDirectory implements Directory<String, Connection>{
         Integer toConnectionGroupID = ((ConnectionDirectory)directory).parentID;
         
         // Get connection
-        mariaDBConnection mariaDBConnection =
+        MariaDBConnection MariaDBConnection =
                 connectionService.retrieveConnection(identifier, currentUser);
         
-        if(mariaDBConnection == null)
+        if(MariaDBConnection == null)
             throw new GuacamoleResourceNotFoundException("Connection not found.");
 
         // Verify permission to update the connection
         permissionCheckService.verifyConnectionAccess(currentUser,
-                mariaDBConnection.getConnectionID(),
-                mariaDBConstants.CONNECTION_UPDATE);
+                MariaDBConnection.getConnectionID(),
+                MariaDBConstants.CONNECTION_UPDATE);
         
         // Verify permission to use the from connection group for organizational purposes
         permissionCheckService.verifyConnectionGroupUsageAccess
-                (mariaDBConnection.getParentID(), currentUser, mariaDBConstants.CONNECTION_GROUP_ORGANIZATIONAL);
+                (MariaDBConnection.getParentID(), currentUser, MariaDBConstants.CONNECTION_GROUP_ORGANIZATIONAL);
 
         // Verify permission to update the from connection group
         permissionCheckService.verifyConnectionGroupAccess(currentUser,
-                mariaDBConnection.getParentID(), mariaDBConstants.CONNECTION_GROUP_UPDATE);
+                MariaDBConnection.getParentID(), MariaDBConstants.CONNECTION_GROUP_UPDATE);
         
         // Verify permission to use the to connection group for organizational purposes
         permissionCheckService.verifyConnectionGroupUsageAccess
-                (toConnectionGroupID, currentUser, mariaDBConstants.CONNECTION_GROUP_ORGANIZATIONAL);
+                (toConnectionGroupID, currentUser, MariaDBConstants.CONNECTION_GROUP_ORGANIZATIONAL);
 
         // Verify permission to update the to connection group
         permissionCheckService.verifyConnectionGroupAccess(currentUser,
-                toConnectionGroupID, mariaDBConstants.CONNECTION_GROUP_UPDATE);
+                toConnectionGroupID, MariaDBConstants.CONNECTION_GROUP_UPDATE);
 
         // Verify that no connection already exists with this name.
-        mariaDBConnection previousConnection =
-                connectionService.retrieveConnection(mariaDBConnection.getName(), 
+        MariaDBConnection previousConnection =
+                connectionService.retrieveConnection(MariaDBConnection.getName(), 
                 toConnectionGroupID, currentUser);
         if(previousConnection != null)
             throw new GuacamoleClientException("That connection name is already in use.");
         
         // Update the connection
-        mariaDBConnection.setParentID(toConnectionGroupID);
-        connectionService.updateConnection(mariaDBConnection);
+        MariaDBConnection.setParentID(toConnectionGroupID);
+        connectionService.updateConnection(MariaDBConnection);
     }
 
 }

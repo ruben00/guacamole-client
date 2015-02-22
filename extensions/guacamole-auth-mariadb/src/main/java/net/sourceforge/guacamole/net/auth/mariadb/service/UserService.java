@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package net.sourceforge.guacamole.net.auth.mariaDB.service;
+package net.sourceforge.guacamole.net.auth.mariadb.service;
 
 import com.google.common.collect.Lists;
 import com.google.inject.Inject;
@@ -35,11 +35,11 @@ import java.util.Map;
 import java.util.Set;
 import org.glyptodon.guacamole.GuacamoleException;
 import org.glyptodon.guacamole.net.auth.Credentials;
-import net.sourceforge.guacamole.net.auth.mariaDB.mariaDBUser;
-import net.sourceforge.guacamole.net.auth.mariaDB.dao.UserMapper;
-import net.sourceforge.guacamole.net.auth.mariaDB.model.User;
-import net.sourceforge.guacamole.net.auth.mariaDB.model.UserExample;
-import net.sourceforge.guacamole.net.auth.mariaDB.model.UserWithBLOBs;
+import net.sourceforge.guacamole.net.auth.mariadb.MariaDBUser;
+import net.sourceforge.guacamole.net.auth.mariadb.dao.UserMapper;
+import net.sourceforge.guacamole.net.auth.mariadb.model.User;
+import net.sourceforge.guacamole.net.auth.mariadb.model.UserExample;
+import net.sourceforge.guacamole.net.auth.mariadb.model.UserWithBLOBs;
 
 /**
  * Service which provides convenience methods for creating, retrieving, and
@@ -59,7 +59,7 @@ public class UserService {
      * Provider for creating users.
      */
     @Inject
-    private Provider<mariaDBUser> mariaDBUserProvider;
+    private Provider<MariaDBUser> MariaDBUserProvider;
 
     /**
      * Service for checking permissions.
@@ -80,36 +80,36 @@ public class UserService {
     private SaltService saltService;
 
     /**
-     * Create a new mariaDBUser based on the provided User.
+     * Create a new MariaDBUser based on the provided User.
      *
      * @param user The User to use when populating the data of the given
-     *             mariaDBUser.
-     * @return A new mariaDBUser object, populated with the data of the given
+     *             MariaDBUser.
+     * @return A new MariaDBUser object, populated with the data of the given
      *         user.
      *
      * @throws GuacamoleException If an error occurs while reading the data
      *                            of the provided User.
      */
-    public mariaDBUser tomariaDBUser(org.glyptodon.guacamole.net.auth.User user) throws GuacamoleException {
-        mariaDBUser mariaDBUser = mariaDBUserProvider.get();
-        mariaDBUser.init(user);
-        return mariaDBUser;
+    public MariaDBUser toMariaDBUser(org.glyptodon.guacamole.net.auth.User user) throws GuacamoleException {
+        MariaDBUser MariaDBUser = MariaDBUserProvider.get();
+        MariaDBUser.init(user);
+        return MariaDBUser;
     }
 
     /**
-     * Create a new mariaDBUser based on the provided database record.
+     * Create a new MariaDBUser based on the provided database record.
      *
      * @param user The database record describing the user.
-     * @return A new mariaDBUser object, populated with the data of the given
+     * @return A new MariaDBUser object, populated with the data of the given
      *         database record.
      */
-    private mariaDBUser tomariaDBUser(UserWithBLOBs user) {
+    private MariaDBUser toMariaDBUser(UserWithBLOBs user) {
 
         // Retrieve user from provider
-        mariaDBUser mariaDBUser = mariaDBUserProvider.get();
+        MariaDBUser MariaDBUser = MariaDBUserProvider.get();
 
         // Init with data from given database user
-        mariaDBUser.init(
+        MariaDBUser.init(
             user.getUser_id(),
             user.getUsername(),
             null,
@@ -117,7 +117,7 @@ public class UserService {
         );
 
         // Return new user
-        return mariaDBUser;
+        return MariaDBUser;
 
     }
 
@@ -125,9 +125,9 @@ public class UserService {
      * Retrieves the user having the given ID from the database.
      *
      * @param id The ID of the user to retrieve.
-     * @return The existing mariaDBUser object if found, null otherwise.
+     * @return The existing MariaDBUser object if found, null otherwise.
      */
-    public mariaDBUser retrieveUser(int id) {
+    public MariaDBUser retrieveUser(int id) {
 
         // Query user by ID
         UserWithBLOBs user = userDAO.selectByPrimaryKey(id);
@@ -137,7 +137,7 @@ public class UserService {
             return null;
 
         // Otherwise, return found user
-        return tomariaDBUser(user);
+        return toMariaDBUser(user);
 
     }
 
@@ -145,9 +145,9 @@ public class UserService {
      * Retrieves the user having the given username from the database.
      *
      * @param name The username of the user to retrieve.
-     * @return The existing mariaDBUser object if found, null otherwise.
+     * @return The existing MariaDBUser object if found, null otherwise.
      */
-    public mariaDBUser retrieveUser(String name) {
+    public MariaDBUser retrieveUser(String name) {
 
         // Query user by ID
         UserExample example = new UserExample();
@@ -159,7 +159,7 @@ public class UserService {
             return null;
 
         // Otherwise, return found user
-        return tomariaDBUser(users.get(0));
+        return toMariaDBUser(users.get(0));
 
     }
 
@@ -168,10 +168,10 @@ public class UserService {
      * database.
      *
      * @param credentials The credentials to use when locating the user.
-     * @return The existing mariaDBUser object if the credentials given are
+     * @return The existing MariaDBUser object if the credentials given are
      *         valid, null otherwise.
      */
-    public mariaDBUser retrieveUser(Credentials credentials) {
+    public MariaDBUser retrieveUser(Credentials credentials) {
 
         // No null users in database
         if (credentials.getUsername() == null)
@@ -198,7 +198,7 @@ public class UserService {
             return null;
 
         // Return found user
-        return tomariaDBUser(user);
+        return toMariaDBUser(user);
 
     }
 
@@ -267,10 +267,10 @@ public class UserService {
      *
      * @param username The username to assign to the new user.
      * @param password The password to assign to the new user.
-     * @return A new mariaDBUser containing the data of the newly created
+     * @return A new MariaDBUser containing the data of the newly created
      *         user.
      */
-    public mariaDBUser createUser(String username, String password) {
+    public MariaDBUser createUser(String username, String password) {
 
         // Initialize database user
         UserWithBLOBs user = new UserWithBLOBs();
@@ -286,7 +286,7 @@ public class UserService {
 
         // Create user
         userDAO.insert(user);
-        return tomariaDBUser(user);
+        return toMariaDBUser(user);
 
     }
 
@@ -299,23 +299,23 @@ public class UserService {
     }
 
     /**
-     * Updates the user in the database corresponding to the given mariaDBUser.
+     * Updates the user in the database corresponding to the given MariaDBUser.
      *
-     * @param mariaDBUser The mariaDBUser to update (save) to the database. This
+     * @param MariaDBUser The MariaDBUser to update (save) to the database. This
      *                  user must already exist.
      */
-    public void updateUser(mariaDBUser mariaDBUser) {
+    public void updateUser(MariaDBUser MariaDBUser) {
 
         UserWithBLOBs user = new UserWithBLOBs();
-        user.setUser_id(mariaDBUser.getUserID());
-        user.setUsername(mariaDBUser.getUsername());
+        user.setUser_id(MariaDBUser.getUserID());
+        user.setUsername(MariaDBUser.getUsername());
 
         // Set password if specified
-        if (mariaDBUser.getPassword() != null) {
+        if (MariaDBUser.getPassword() != null) {
             byte[] salt = saltService.generateSalt();
             user.setPassword_salt(salt);
             user.setPassword_hash(
-                passwordService.createPasswordHash(mariaDBUser.getPassword(), salt));
+                passwordService.createPasswordHash(MariaDBUser.getPassword(), salt));
         }
 
         // Update the user in the database

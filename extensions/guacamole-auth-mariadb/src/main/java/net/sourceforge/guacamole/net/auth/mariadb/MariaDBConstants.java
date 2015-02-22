@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package net.sourceforge.guacamole.net.auth.mariaDB;
+package net.sourceforge.guacamole.net.auth.MariaDB;
 
 import org.glyptodon.guacamole.net.auth.ConnectionGroup;
 import org.glyptodon.guacamole.net.auth.permission.ObjectPermission;
@@ -28,15 +28,15 @@ import org.glyptodon.guacamole.net.auth.permission.SystemPermission;
 
 
 /**
- * A set of constants that are useful for the mariaDB-based authentication provider.
+ * A set of constants that are useful for the MariaDB-based authentication provider.
  * @author James Muehlner
  */
-public final class mariaDBConstants {
+public final class MariaDBConstants {
 
     /**
      * This class should not be instantiated.
      */
-    private mariaDBConstants() {}
+    private MariaDBConstants() {}
 
     /**
      * The string stored in the database to represent READ access to a user.
@@ -150,15 +150,15 @@ public final class mariaDBConstants {
     public static final String SYSTEM_ADMINISTER = "ADMINISTER";
 
     /**
-     * Given the type of a permission affecting a user, returns the mariaDB
+     * Given the type of a permission affecting a user, returns the MariaDB
      * constant representing that permission type.
      *
      * @param type The type of permission to look up.
-     * @return The mariaDB constant corresponding to the given permission type.
+     * @return The MariaDB constant corresponding to the given permission type.
      */
     public static String getUserConstant(ObjectPermission.Type type) {
 
-        // Convert permission type to mariaDB constant
+        // Convert permission type to MariaDB constant
         switch (type) {
             case READ:       return USER_READ;
             case UPDATE:     return USER_UPDATE;
@@ -173,15 +173,15 @@ public final class mariaDBConstants {
     }
 
     /**
-     * Given the type of a permission affecting a connection, returns the mariaDB
+     * Given the type of a permission affecting a connection, returns the MariaDB
      * constant representing that permission type.
      *
      * @param type The type of permission to look up.
-     * @return The mariaDB constant corresponding to the given permission type.
+     * @return The MariaDB constant corresponding to the given permission type.
      */
     public static String getConnectionConstant(ObjectPermission.Type type) {
 
-        // Convert permission type to mariaDB constant
+        // Convert permission type to MariaDB constant
         switch (type) {
             case READ:       return CONNECTION_READ;
             case UPDATE:     return CONNECTION_UPDATE;
@@ -197,14 +197,14 @@ public final class mariaDBConstants {
 
     /**
      * Given the type of a permission affecting a connection group, 
-     * returns the mariaDB constant representing that permission type.
+     * returns the MariaDB constant representing that permission type.
      *
      * @param type The type of permission to look up.
-     * @return The mariaDB constant corresponding to the given permission type.
+     * @return The MariaDB constant corresponding to the given permission type.
      */
     public static String getConnectionGroupConstant(ObjectPermission.Type type) {
 
-        // Convert permission type to mariaDB constant
+        // Convert permission type to MariaDB constant
         switch (type) {
             case READ:       return CONNECTION_GROUP_READ;
             case UPDATE:     return CONNECTION_GROUP_UPDATE;
@@ -219,15 +219,15 @@ public final class mariaDBConstants {
     }
 
     /**
-     * Given the type of a connection group, returns the mariaDB constant
+     * Given the type of a connection group, returns the MariaDB constant
      * representing that type.
      *
      * @param type The connection group type to look up.
-     * @return The mariaDB constant corresponding to the given type.
+     * @return The MariaDB constant corresponding to the given type.
      */
     public static String getConnectionGroupTypeConstant(ConnectionGroup.Type type) {
 
-        // Convert permission type to mariaDB constant
+        // Convert permission type to MariaDB constant
         switch (type) {
             case ORGANIZATIONAL: return CONNECTION_GROUP_ORGANIZATIONAL;
             case BALANCING:      return CONNECTION_GROUP_BALANCING;
@@ -240,15 +240,15 @@ public final class mariaDBConstants {
     }
 
     /**
-     * Given the type of a permission affecting the system, returns the mariaDB
+     * Given the type of a permission affecting the system, returns the MariaDB
      * constant representing that permission type.
      *
      * @param type The type of permission to look up.
-     * @return The mariaDB constant corresponding to the given permission type.
+     * @return The MariaDB constant corresponding to the given permission type.
      */
     public static String getSystemConstant(SystemPermission.Type type) {
 
-        // Convert permission type to mariaDB constant
+        // Convert permission type to MariaDB constant
         switch (type) {
             case CREATE_USER:             return SYSTEM_USER_CREATE;
             case CREATE_CONNECTION:       return SYSTEM_CONNECTION_CREATE;

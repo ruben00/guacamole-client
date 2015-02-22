@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package net.sourceforge.guacamole.net.auth.mariaDB;
+package net.sourceforge.guacamole.net.auth.MariaDB;
 
 
 import com.google.inject.Inject;
@@ -31,15 +31,15 @@ import org.glyptodon.guacamole.net.auth.AbstractConnectionGroup;
 import org.glyptodon.guacamole.net.auth.Connection;
 import org.glyptodon.guacamole.net.auth.ConnectionGroup;
 import org.glyptodon.guacamole.net.auth.Directory;
-import net.sourceforge.guacamole.net.auth.mariaDB.service.ConnectionGroupService;
-import net.sourceforge.guacamole.net.auth.mariaDB.service.PermissionCheckService;
+import net.sourceforge.guacamole.net.auth.mariadb.service.ConnectionGroupService;
+import net.sourceforge.guacamole.net.auth.mariadb.service.PermissionCheckService;
 import org.glyptodon.guacamole.protocol.GuacamoleClientInformation;
 
 /**
- * A mariaDB based implementation of the ConnectionGroup object.
+ * A MariaDB based implementation of the ConnectionGroup object.
  * @author James Muehlner
  */
-public class mariaDBConnectionGroup extends AbstractConnectionGroup {
+public class MariaDBConnectionGroup extends AbstractConnectionGroup {
 
     /**
      * The ID associated with this connection group in the database.
@@ -91,7 +91,7 @@ public class mariaDBConnectionGroup extends AbstractConnectionGroup {
     /**
      * Create a default, empty connection group.
      */
-    public mariaDBConnectionGroup() {
+    public MariaDBConnectionGroup() {
     }
 
     /**
@@ -129,7 +129,7 @@ public class mariaDBConnectionGroup extends AbstractConnectionGroup {
         if (parentID != null)
             this.setParentIdentifier(String.valueOf(parentID));
         else
-            this.setParentIdentifier(mariaDBConstants.CONNECTION_GROUP_ROOT_IDENTIFIER);
+            this.setParentIdentifier(MariaDBConstants.CONNECTION_GROUP_ROOT_IDENTIFIER);
 
     }
 
@@ -176,12 +176,12 @@ public class mariaDBConnectionGroup extends AbstractConnectionGroup {
         
         // Verify permission to use the connection group for balancing purposes
         permissionCheckService.verifyConnectionGroupUsageAccess
-                (this.connectionGroupID, currentUser, mariaDBConstants.CONNECTION_GROUP_BALANCING);
+                (this.connectionGroupID, currentUser, MariaDBConstants.CONNECTION_GROUP_BALANCING);
 
         // Verify permission to delete
         permissionCheckService.verifyConnectionGroupAccess(currentUser,
                 this.connectionGroupID,
-                mariaDBConstants.CONNECTION_GROUP_READ);
+                MariaDBConstants.CONNECTION_GROUP_READ);
         
         return connectionGroupService.connect(this, info, currentUser);
     }

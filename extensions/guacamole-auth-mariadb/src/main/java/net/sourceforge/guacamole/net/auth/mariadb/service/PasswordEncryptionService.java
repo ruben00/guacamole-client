@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package net.sourceforge.guacamole.net.auth.mariaDB.service;
+package net.sourceforge.guacamole.net.auth.mariadb.service;
 
 
 /**

@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package net.sourceforge.guacamole.net.auth.mariaDB;
+package net.sourceforge.guacamole.net.auth.MariaDB;
 
 
 import com.google.inject.Inject;
@@ -29,14 +29,14 @@ import org.glyptodon.guacamole.net.auth.ConnectionGroup;
 import org.glyptodon.guacamole.net.auth.Directory;
 import org.glyptodon.guacamole.net.auth.User;
 import org.glyptodon.guacamole.net.auth.UserContext;
-import net.sourceforge.guacamole.net.auth.mariaDB.service.UserService;
+import net.sourceforge.guacamole.net.auth.mariadb.service.UserService;
 import org.glyptodon.guacamole.net.auth.Credentials;
 
 /**
- * The mariaDB representation of a UserContext.
+ * The MariaDB representation of a UserContext.
  * @author James Muehlner
  */
-public class mariaDBUserContext implements UserContext {
+public class MariaDBUserContext implements UserContext {
 
     /**
      * The the user owning this context. The permissions of this user dictate
@@ -55,7 +55,7 @@ public class mariaDBUserContext implements UserContext {
      * The root connection group.
      */
     @Inject
-    private mariaDBConnectionGroup rootConnectionGroup;
+    private MariaDBConnectionGroup rootConnectionGroup;
 
     /**
      * Service for accessing users.
@@ -73,8 +73,8 @@ public class mariaDBUserContext implements UserContext {
         this.currentUser = currentUser;
         userDirectory.init(currentUser);
         rootConnectionGroup.init(null, null, 
-                mariaDBConstants.CONNECTION_GROUP_ROOT_IDENTIFIER, 
-                mariaDBConstants.CONNECTION_GROUP_ROOT_IDENTIFIER, 
+                MariaDBConstants.CONNECTION_GROUP_ROOT_IDENTIFIER, 
+                MariaDBConstants.CONNECTION_GROUP_ROOT_IDENTIFIER, 
                 ConnectionGroup.Type.ORGANIZATIONAL, currentUser);
     }
 

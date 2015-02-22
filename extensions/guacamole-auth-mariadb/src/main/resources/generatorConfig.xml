@@ -31,22 +31,22 @@
         <!-- Allow selectByExample with RowBounds -->
         <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"/>
 
-        <!-- mariaDB JDBC driver class. -->
+        <!-- MariaDB JDBC driver class. -->
         <jdbcConnection driverClass="org.mariadb.jdbc.Driver"
-            connectionURL="jdbc:mariaDB://127.0.0.1:3306"
+            connectionURL="jdbc:Mariadb://127.0.0.1:3306"
             userId="${guacamole.database.user}"
             password="${guacamole.database.password}"/>
 
         <javaModelGenerator
-            targetPackage="net.sourceforge.guacamole.net.auth.mariaDB.model"
+            targetPackage="net.sourceforge.guacamole.net.auth.mariadb.model"
             targetProject="MAVEN"/>
 
         <sqlMapGenerator
-            targetPackage="net.sourceforge.guacamole.net.auth.mariaDB.dao"
+            targetPackage="net.sourceforge.guacamole.net.auth.mariadb.dao"
             targetProject="MAVEN"/>
 
         <javaClientGenerator type="XMLMAPPER"
-            targetPackage="net.sourceforge.guacamole.net.auth.mariaDB.dao"
+            targetPackage="net.sourceforge.guacamole.net.auth.mariadb.dao"
             targetProject="MAVEN"/>
 
         <!-- TABLES -->

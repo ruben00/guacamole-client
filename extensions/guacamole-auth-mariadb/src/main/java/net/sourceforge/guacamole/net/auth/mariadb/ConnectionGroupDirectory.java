@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package net.sourceforge.guacamole.net.auth.mariaDB;
+package net.sourceforge.guacamole.net.auth.MariaDB;
 
 
 import com.google.inject.Inject;
@@ -30,16 +30,16 @@ import org.glyptodon.guacamole.GuacamoleException;
 import org.glyptodon.guacamole.net.auth.ConnectionGroup;
 import org.glyptodon.guacamole.net.auth.ConnectionGroup.Type;
 import org.glyptodon.guacamole.net.auth.Directory;
-import net.sourceforge.guacamole.net.auth.mariaDB.dao.ConnectionGroupPermissionMapper;
-import net.sourceforge.guacamole.net.auth.mariaDB.model.ConnectionGroupPermissionKey;
-import net.sourceforge.guacamole.net.auth.mariaDB.service.ConnectionGroupService;
-import net.sourceforge.guacamole.net.auth.mariaDB.service.PermissionCheckService;
+import net.sourceforge.guacamole.net.auth.mariadb.dao.ConnectionGroupPermissionMapper;
+import net.sourceforge.guacamole.net.auth.mariadb.model.ConnectionGroupPermissionKey;
+import net.sourceforge.guacamole.net.auth.mariadb.service.ConnectionGroupService;
+import net.sourceforge.guacamole.net.auth.mariadb.service.PermissionCheckService;
 import org.glyptodon.guacamole.GuacamoleResourceNotFoundException;
 import org.glyptodon.guacamole.GuacamoleUnsupportedException;
 import org.mybatis.guice.transactional.Transactional;
 
 /**
- * A mariaDB-based implementation of the connection group directory.
+ * A MariaDB-based implementation of the connection group directory.
  *
  * @author James Muehlner
  */
@@ -93,7 +93,7 @@ public class ConnectionGroupDirectory implements Directory<String, ConnectionGro
     public ConnectionGroup get(String identifier) throws GuacamoleException {
 
         // Get connection
-        mariaDBConnectionGroup connectionGroup =
+        MariaDBConnectionGroup connectionGroup =
                 connectionGroupService.retrieveConnectionGroup(identifier, currentUser);
         
         if(connectionGroup == null)
@@ -101,13 +101,13 @@ public class ConnectionGroupDirectory implements Directory<String, ConnectionGro
         
         // Verify permission to use the parent connection group for organizational purposes
         permissionCheckService.verifyConnectionGroupUsageAccess
-                (connectionGroup.getParentID(), currentUser, mariaDBConstants.CONNECTION_GROUP_ORGANIZATIONAL);
+                (connectionGroup.getParentID(), currentUser, MariaDBConstants.CONNECTION_GROUP_ORGANIZATIONAL);
 
         // Verify access is granted
         permissionCheckService.verifyConnectionGroupAccess(
                 currentUser,
                 connectionGroup.getConnectionGroupID(),
-                mariaDBConstants.CONNECTION_GROUP_READ);
+                MariaDBConstants.CONNECTION_GROUP_READ);
 
         // Return connection group
         return connectionGroup;
@@ -120,10 +120,10 @@ public class ConnectionGroupDirectory implements Directory<String, ConnectionGro
         
         // Verify permission to use the connection group for organizational purposes
         permissionCheckService.verifyConnectionGroupUsageAccess
-                (parentID, currentUser, mariaDBConstants.CONNECTION_GROUP_ORGANIZATIONAL);
+                (parentID, currentUser, MariaDBConstants.CONNECTION_GROUP_ORGANIZATIONAL);
         
         return permissionCheckService.retrieveConnectionGroupIdentifiers(currentUser, 
-                parentID, mariaDBConstants.CONNECTION_GROUP_READ);
+                parentID, MariaDBConstants.CONNECTION_GROUP_READ);
     }
 
     @Transactional
@@ -136,29 +136,29 @@ public class ConnectionGroupDirectory implements Directory<String, ConnectionGro
         
         Type type = object.getType();
         
-        String mariaDBType = mariaDBConstants.getConnectionGroupTypeConstant(type);
+        String MariaDBType = MariaDBConstants.getConnectionGroupTypeConstant(type);
         
         // Verify permission to create
         permissionCheckService.verifySystemAccess(currentUser,
-                mariaDBConstants.SYSTEM_CONNECTION_GROUP_CREATE);
+                MariaDBConstants.SYSTEM_CONNECTION_GROUP_CREATE);
         
         // Verify permission to edit the parent connection group
         permissionCheckService.verifyConnectionGroupAccess(currentUser, 
-                this.parentID, mariaDBConstants.CONNECTION_GROUP_UPDATE);
+                this.parentID, MariaDBConstants.CONNECTION_GROUP_UPDATE);
         
         // Verify permission to use the parent connection group for organizational purposes
         permissionCheckService.verifyConnectionGroupUsageAccess
-                (parentID, currentUser, mariaDBConstants.CONNECTION_GROUP_ORGANIZATIONAL);
+                (parentID, currentUser, MariaDBConstants.CONNECTION_GROUP_ORGANIZATIONAL);
 
         // Verify that no connection already exists with this name.
-        mariaDBConnectionGroup previousConnectionGroup =
+        MariaDBConnectionGroup previousConnectionGroup =
                 connectionGroupService.retrieveConnectionGroup(name, parentID, currentUser);
         if(previousConnectionGroup != null)
             throw new GuacamoleClientException("That connection group name is already in use.");
 
         // Create connection group
-        mariaDBConnectionGroup connectionGroup = connectionGroupService
-                .createConnectionGroup(name, currentUser, parentID, mariaDBType);
+        MariaDBConnectionGroup connectionGroup = connectionGroupService
+                .createConnectionGroup(name, currentUser, parentID, MariaDBType);
         
         // Set the connection group ID
         object.setIdentifier(connectionGroup.getIdentifier());
@@ -170,19 +170,19 @@ public class ConnectionGroupDirectory implements Directory<String, ConnectionGro
         newConnectionGroupPermission.setConnection_group_id(connectionGroup.getConnectionGroupID());
 
         // Read permission
-        newConnectionGroupPermission.setPermission(mariaDBConstants.CONNECTION_GROUP_READ);
+        newConnectionGroupPermission.setPermission(MariaDBConstants.CONNECTION_GROUP_READ);
         connectionGroupPermissionDAO.insert(newConnectionGroupPermission);
 
         // Update permission
-        newConnectionGroupPermission.setPermission(mariaDBConstants.CONNECTION_GROUP_UPDATE);
+        newConnectionGroupPermission.setPermission(MariaDBConstants.CONNECTION_GROUP_UPDATE);
         connectionGroupPermissionDAO.insert(newConnectionGroupPermission);
 
         // Delete permission
-        newConnectionGroupPermission.setPermission(mariaDBConstants.CONNECTION_GROUP_DELETE);
+        newConnectionGroupPermission.setPermission(MariaDBConstants.CONNECTION_GROUP_DELETE);
         connectionGroupPermissionDAO.insert(newConnectionGroupPermission);
 
         // Administer permission
-        newConnectionGroupPermission.setPermission(mariaDBConstants.CONNECTION_GROUP_ADMINISTER);
+        newConnectionGroupPermission.setPermission(MariaDBConstants.CONNECTION_GROUP_ADMINISTER);
         connectionGroupPermissionDAO.insert(newConnectionGroupPermission);
 
     }
@@ -193,18 +193,18 @@ public class ConnectionGroupDirectory implements Directory<String, ConnectionGro
 
         // If connection not actually from this auth provider, we can't handle
         // the update
-        if (!(object instanceof mariaDBConnectionGroup))
+        if (!(object instanceof MariaDBConnectionGroup))
             throw new GuacamoleUnsupportedException("Connection not from database.");
 
-        mariaDBConnectionGroup mariaDBConnectionGroup = (mariaDBConnectionGroup) object;
+        MariaDBConnectionGroup MariaDBConnectionGroup = (MariaDBConnectionGroup) object;
 
         // Verify permission to update
         permissionCheckService.verifyConnectionGroupAccess(currentUser,
-                mariaDBConnectionGroup.getConnectionGroupID(),
-                mariaDBConstants.CONNECTION_GROUP_UPDATE);
+                MariaDBConnectionGroup.getConnectionGroupID(),
+                MariaDBConstants.CONNECTION_GROUP_UPDATE);
 
         // Perform update
-        connectionGroupService.updateConnectionGroup(mariaDBConnectionGroup);
+        connectionGroupService.updateConnectionGroup(MariaDBConnectionGroup);
     }
 
     @Transactional
@@ -212,24 +212,24 @@ public class ConnectionGroupDirectory implements Directory<String, ConnectionGro
     public void remove(String identifier) throws GuacamoleException {
 
         // Get connection
-        mariaDBConnectionGroup mariaDBConnectionGroup =
+        MariaDBConnectionGroup MariaDBConnectionGroup =
                 connectionGroupService.retrieveConnectionGroup(identifier, currentUser);
         
-        if(mariaDBConnectionGroup == null)
+        if(MariaDBConnectionGroup == null)
             throw new GuacamoleResourceNotFoundException("Connection group not found.");
         
         // Verify permission to use the parent connection group for organizational purposes
         permissionCheckService.verifyConnectionGroupUsageAccess
-                (mariaDBConnectionGroup.getParentID(), currentUser, mariaDBConstants.CONNECTION_GROUP_ORGANIZATIONAL);
+                (MariaDBConnectionGroup.getParentID(), currentUser, MariaDBConstants.CONNECTION_GROUP_ORGANIZATIONAL);
 
         // Verify permission to delete
         permissionCheckService.verifyConnectionGroupAccess(currentUser,
-                mariaDBConnectionGroup.getConnectionGroupID(),
-                mariaDBConstants.CONNECTION_GROUP_DELETE);
+                MariaDBConnectionGroup.getConnectionGroupID(),
+                MariaDBConstants.CONNECTION_GROUP_DELETE);
 
         // Delete the connection group itself
         connectionGroupService.deleteConnectionGroup
-                (mariaDBConnectionGroup.getConnectionGroupID());
+                (MariaDBConnectionGroup.getConnectionGroupID());
 
     }
 
@@ -237,7 +237,7 @@ public class ConnectionGroupDirectory implements Directory<String, ConnectionGro
     public void move(String identifier, Directory<String, ConnectionGroup> directory) 
             throws GuacamoleException {
         
-        if(mariaDBConstants.CONNECTION_GROUP_ROOT_IDENTIFIER.equals(identifier))
+        if(MariaDBConstants.CONNECTION_GROUP_ROOT_IDENTIFIER.equals(identifier))
             throw new GuacamoleUnsupportedException("The root connection group cannot be moved.");
         
         if(!(directory instanceof ConnectionGroupDirectory))
@@ -246,36 +246,36 @@ public class ConnectionGroupDirectory implements Directory<String, ConnectionGro
         Integer toConnectionGroupID = ((ConnectionGroupDirectory)directory).parentID;
 
         // Get connection group
-        mariaDBConnectionGroup mariaDBConnectionGroup =
+        MariaDBConnectionGroup MariaDBConnectionGroup =
                 connectionGroupService.retrieveConnectionGroup(identifier, currentUser);
         
-        if(mariaDBConnectionGroup == null)
+        if(MariaDBConnectionGroup == null)
             throw new GuacamoleResourceNotFoundException("Connection group not found.");
 
         // Verify permission to update the connection group
         permissionCheckService.verifyConnectionGroupAccess(currentUser,
-                mariaDBConnectionGroup.getConnectionGroupID(),
-                mariaDBConstants.CONNECTION_GROUP_UPDATE);
+                MariaDBConnectionGroup.getConnectionGroupID(),
+                MariaDBConstants.CONNECTION_GROUP_UPDATE);
         
         // Verify permission to use the from connection group for organizational purposes
         permissionCheckService.verifyConnectionGroupUsageAccess
-                (mariaDBConnectionGroup.getParentID(), currentUser, mariaDBConstants.CONNECTION_GROUP_ORGANIZATIONAL);
+                (MariaDBConnectionGroup.getParentID(), currentUser, MariaDBConstants.CONNECTION_GROUP_ORGANIZATIONAL);
 
         // Verify permission to update the from connection group
         permissionCheckService.verifyConnectionGroupAccess(currentUser,
-                mariaDBConnectionGroup.getParentID(), mariaDBConstants.CONNECTION_GROUP_UPDATE);
+                MariaDBConnectionGroup.getParentID(), MariaDBConstants.CONNECTION_GROUP_UPDATE);
         
         // Verify permission to use the to connection group for organizational purposes
         permissionCheckService.verifyConnectionGroupUsageAccess
-                (toConnectionGroupID, currentUser, mariaDBConstants.CONNECTION_GROUP_ORGANIZATIONAL);
+                (toConnectionGroupID, currentUser, MariaDBConstants.CONNECTION_GROUP_ORGANIZATIONAL);
 
         // Verify permission to update the to connection group
         permissionCheckService.verifyConnectionGroupAccess(currentUser,
-                toConnectionGroupID, mariaDBConstants.CONNECTION_GROUP_UPDATE);
+                toConnectionGroupID, MariaDBConstants.CONNECTION_GROUP_UPDATE);
 
         // Verify that no connection already exists with this name.
-        mariaDBConnectionGroup previousConnectionGroup =
-                connectionGroupService.retrieveConnectionGroup(mariaDBConnectionGroup.getName(), 
+        MariaDBConnectionGroup previousConnectionGroup =
+                connectionGroupService.retrieveConnectionGroup(MariaDBConnectionGroup.getName(), 
                 toConnectionGroupID, currentUser);
         if(previousConnectionGroup != null)
             throw new GuacamoleClientException("That connection group name is already in use.");
@@ -283,18 +283,18 @@ public class ConnectionGroupDirectory implements Directory<String, ConnectionGro
         // Verify that moving this connectionGroup would not cause a cycle
         Integer relativeParentID = toConnectionGroupID;
         while(relativeParentID != null) {
-            if(relativeParentID == mariaDBConnectionGroup.getConnectionGroupID())
+            if(relativeParentID == MariaDBConnectionGroup.getConnectionGroupID())
                 throw new GuacamoleUnsupportedException("Connection group cycle detected.");
             
-            mariaDBConnectionGroup relativeParentGroup = connectionGroupService.
+            MariaDBConnectionGroup relativeParentGroup = connectionGroupService.
                     retrieveConnectionGroup(relativeParentID, currentUser);
             
             relativeParentID = relativeParentGroup.getParentID();
         }
         
         // Update the connection
-        mariaDBConnectionGroup.setParentID(toConnectionGroupID);
-        connectionGroupService.updateConnectionGroup(mariaDBConnectionGroup);
+        MariaDBConnectionGroup.setParentID(toConnectionGroupID);
+        connectionGroupService.updateConnectionGroup(MariaDBConnectionGroup);
     }
 
 }

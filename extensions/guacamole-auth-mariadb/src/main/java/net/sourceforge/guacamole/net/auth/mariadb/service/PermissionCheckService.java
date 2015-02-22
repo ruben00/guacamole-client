@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package net.sourceforge.guacamole.net.auth.mariaDB.service;
+package net.sourceforge.guacamole.net.auth.mariadb.service;
 
 import com.google.inject.Inject;
 import java.util.ArrayList;
@@ -29,23 +29,23 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import net.sourceforge.guacamole.net.auth.mariaDB.AuthenticatedUser;
+import net.sourceforge.guacamole.net.auth.mariadb.AuthenticatedUser;
 import org.glyptodon.guacamole.GuacamoleSecurityException;
-import net.sourceforge.guacamole.net.auth.mariaDB.mariaDBConnectionGroup;
-import net.sourceforge.guacamole.net.auth.mariaDB.mariaDBConstants;
-import net.sourceforge.guacamole.net.auth.mariaDB.dao.ConnectionGroupPermissionMapper;
-import net.sourceforge.guacamole.net.auth.mariaDB.dao.ConnectionPermissionMapper;
-import net.sourceforge.guacamole.net.auth.mariaDB.dao.SystemPermissionMapper;
-import net.sourceforge.guacamole.net.auth.mariaDB.dao.UserPermissionMapper;
-import net.sourceforge.guacamole.net.auth.mariaDB.model.ConnectionGroupPermissionExample;
-import net.sourceforge.guacamole.net.auth.mariaDB.model.ConnectionGroupPermissionKey;
-import net.sourceforge.guacamole.net.auth.mariaDB.model.ConnectionPermissionExample;
-import net.sourceforge.guacamole.net.auth.mariaDB.model.ConnectionPermissionExample.Criteria;
-import net.sourceforge.guacamole.net.auth.mariaDB.model.ConnectionPermissionKey;
-import net.sourceforge.guacamole.net.auth.mariaDB.model.SystemPermissionExample;
-import net.sourceforge.guacamole.net.auth.mariaDB.model.SystemPermissionKey;
-import net.sourceforge.guacamole.net.auth.mariaDB.model.UserPermissionExample;
-import net.sourceforge.guacamole.net.auth.mariaDB.model.UserPermissionKey;
+import net.sourceforge.guacamole.net.auth.mariadb.MariaDBConnectionGroup;
+import net.sourceforge.guacamole.net.auth.mariadb.MariaDBConstants;
+import net.sourceforge.guacamole.net.auth.mariadb.dao.ConnectionGroupPermissionMapper;
+import net.sourceforge.guacamole.net.auth.mariadb.dao.ConnectionPermissionMapper;
+import net.sourceforge.guacamole.net.auth.mariadb.dao.SystemPermissionMapper;
+import net.sourceforge.guacamole.net.auth.mariadb.dao.UserPermissionMapper;
+import net.sourceforge.guacamole.net.auth.mariadb.model.ConnectionGroupPermissionExample;
+import net.sourceforge.guacamole.net.auth.mariadb.model.ConnectionGroupPermissionKey;
+import net.sourceforge.guacamole.net.auth.mariadb.model.ConnectionPermissionExample;
+import net.sourceforge.guacamole.net.auth.mariadb.model.ConnectionPermissionExample.Criteria;
+import net.sourceforge.guacamole.net.auth.mariadb.model.ConnectionPermissionKey;
+import net.sourceforge.guacamole.net.auth.mariadb.model.SystemPermissionExample;
+import net.sourceforge.guacamole.net.auth.mariadb.model.SystemPermissionKey;
+import net.sourceforge.guacamole.net.auth.mariadb.model.UserPermissionExample;
+import net.sourceforge.guacamole.net.auth.mariadb.model.UserPermissionKey;
 import org.glyptodon.guacamole.net.auth.permission.ConnectionGroupPermission;
 import org.glyptodon.guacamole.net.auth.permission.ConnectionPermission;
 import org.glyptodon.guacamole.net.auth.permission.Permission;
@@ -284,8 +284,8 @@ public class PermissionCheckService {
 
         // All users have implicit permission to read and update the root connection group
         if(affectedConnectionGroupID == null && 
-                mariaDBConstants.CONNECTION_GROUP_READ.equals(permissionType) ||
-                mariaDBConstants.CONNECTION_GROUP_UPDATE.equals(permissionType))
+                MariaDBConstants.CONNECTION_GROUP_READ.equals(permissionType) ||
+                MariaDBConstants.CONNECTION_GROUP_UPDATE.equals(permissionType))
             return true;
         
         // A system administrator has full access to everything.
@@ -338,7 +338,7 @@ public class PermissionCheckService {
         // Check existence of system administrator permission
         SystemPermissionExample example = new SystemPermissionExample();
         example.createCriteria().andUser_idEqualTo(currentUser.getUserID())
-                .andPermissionEqualTo(mariaDBConstants.SYSTEM_ADMINISTER);
+                .andPermissionEqualTo(MariaDBConstants.SYSTEM_ADMINISTER);
         return systemPermissionDAO.countByExample(example) > 0;
     }
     
@@ -387,7 +387,7 @@ public class PermissionCheckService {
         
         // The root level connection group can only be used for organization
         if(connectionGroupID == null)
-            return mariaDBConstants.CONNECTION_GROUP_ORGANIZATIONAL.equals(usage);
+            return MariaDBConstants.CONNECTION_GROUP_ORGANIZATIONAL.equals(usage);
 
         // A system administrator has full access to everything.
         if(checkSystemAdministratorAccess(currentUser))
@@ -395,11 +395,11 @@ public class PermissionCheckService {
         
         // A connection group administrator can use the group either way.
         if(checkConnectionGroupAccess(currentUser, connectionGroupID,
-                mariaDBConstants.CONNECTION_GROUP_ADMINISTER))
+                MariaDBConstants.CONNECTION_GROUP_ADMINISTER))
             return true;
         
         // Query the connection group
-        mariaDBConnectionGroup connectionGroup = connectionGroupService.
+        MariaDBConnectionGroup connectionGroup = connectionGroupService.
                 retrieveConnectionGroup(connectionGroupID, currentUser);
         
         // If the connection group is not found, it cannot be used.
@@ -407,7 +407,7 @@ public class PermissionCheckService {
             return false;
 
         // Verify that the desired usage matches the type.
-        return mariaDBConstants.getConnectionGroupTypeConstant(
+        return MariaDBConstants.getConnectionGroupTypeConstant(
                 connectionGroup.getType()).equals(usage);
         
     }
@@ -653,8 +653,8 @@ public class PermissionCheckService {
             connectionGroupIDs.add(permission.getConnection_group_id());
         
         // All users have implicit access to read and update the root group
-        if(mariaDBConstants.CONNECTION_GROUP_READ.equals(permissionType)
-                && mariaDBConstants.CONNECTION_GROUP_UPDATE.equals(permissionType)
+        if(MariaDBConstants.CONNECTION_GROUP_READ.equals(permissionType)
+                && MariaDBConstants.CONNECTION_GROUP_UPDATE.equals(permissionType)
                 && !checkParentID)
             connectionGroupIDs.add(null);
 
@@ -684,7 +684,7 @@ public class PermissionCheckService {
 
         // List of all user IDs for which this user has read access
         List<Integer> currentUsers =
-                retrieveUserIDs(currentUser, mariaDBConstants.USER_READ);
+                retrieveUserIDs(currentUser, MariaDBConstants.USER_READ);
 
         // Query all associated users
         return userService.translateUsernames(currentUsers).keySet();
@@ -719,7 +719,7 @@ public class PermissionCheckService {
         List<Integer> connectionIDs =
                 retrieveConnectionIDs(currentUser, parentID, permissionType);
         
-        // Unique Identifiers for mariaDBConnections are the database IDs
+        // Unique Identifiers for MariaDBConnections are the database IDs
         Set<String> connectionIdentifiers = new HashSet<String>();
         
         for(Integer connectionID : connectionIDs)
@@ -756,7 +756,7 @@ public class PermissionCheckService {
         List<Integer> connectionGroupIDs =
                 retrieveConnectionGroupIDs(currentUser, parentID, permissionType);
         
-        // Unique Identifiers for mariaDBConnectionGroups are the database IDs
+        // Unique Identifiers for MariaDBConnectionGroups are the database IDs
         Set<String> connectionGroupIdentifiers = new HashSet<String>();
         
         for(Integer connectionGroupID : connectionGroupIDs)
@@ -883,13 +883,13 @@ public class PermissionCheckService {
         // All users have implict access to read the root connection group
         permissions.add(new ConnectionGroupPermission(
             ConnectionGroupPermission.Type.READ,
-            mariaDBConstants.CONNECTION_GROUP_ROOT_IDENTIFIER
+            MariaDBConstants.CONNECTION_GROUP_ROOT_IDENTIFIER
         ));
         
         // All users have implict access to update the root connection group
         permissions.add(new ConnectionGroupPermission(
             ConnectionGroupPermission.Type.UPDATE,
-            mariaDBConstants.CONNECTION_GROUP_ROOT_IDENTIFIER
+            MariaDBConstants.CONNECTION_GROUP_ROOT_IDENTIFIER
         ));
 
         return permissions;
@@ -917,19 +917,19 @@ public class PermissionCheckService {
         for(SystemPermissionKey systemPermission : systemPermissions) {
 
             // User creation permission
-            if(systemPermission.getPermission().equals(mariaDBConstants.SYSTEM_USER_CREATE))
+            if(systemPermission.getPermission().equals(MariaDBConstants.SYSTEM_USER_CREATE))
                 permissions.add(new SystemPermission(SystemPermission.Type.CREATE_USER));
 
             // System creation permission
-            else if(systemPermission.getPermission().equals(mariaDBConstants.SYSTEM_CONNECTION_CREATE))
+            else if(systemPermission.getPermission().equals(MariaDBConstants.SYSTEM_CONNECTION_CREATE))
                 permissions.add(new SystemPermission(SystemPermission.Type.CREATE_CONNECTION));
 
             // System creation permission
-            else if(systemPermission.getPermission().equals(mariaDBConstants.SYSTEM_CONNECTION_GROUP_CREATE))
+            else if(systemPermission.getPermission().equals(MariaDBConstants.SYSTEM_CONNECTION_GROUP_CREATE))
                 permissions.add(new SystemPermission(SystemPermission.Type.CREATE_CONNECTION_GROUP));
 
             // System administration permission
-            else if(systemPermission.getPermission().equals(mariaDBConstants.SYSTEM_ADMINISTER))
+            else if(systemPermission.getPermission().equals(MariaDBConstants.SYSTEM_ADMINISTER))
                 permissions.add(new SystemPermission(SystemPermission.Type.ADMINISTER));
 
         }

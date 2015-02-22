@@ -21,8 +21,8 @@
  */
 
 /**
- * Service classes which help fill the needs of the mariaDB authentication
+ * Service classes which help fill the needs of the MariaDB authentication
  * provider.
  */
-package net.sourceforge.guacamole.net.auth.mariaDB.service;
+package net.sourceforge.guacamole.net.auth.mariadb.service;
 

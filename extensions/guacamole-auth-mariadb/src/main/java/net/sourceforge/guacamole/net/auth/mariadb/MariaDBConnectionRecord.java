@@ -20,18 +20,18 @@
  * THE SOFTWARE.
  */
 
-package net.sourceforge.guacamole.net.auth.mariaDB;
+package net.sourceforge.guacamole.net.auth.MariaDB;
 
 
 import java.util.Date;
 import org.glyptodon.guacamole.net.auth.ConnectionRecord;
 
 /**
- * A ConnectionRecord which is based on data stored in mariaDB.
+ * A ConnectionRecord which is based on data stored in MariaDB.
  *
  * @author James Muehlner
  */
-public class mariaDBConnectionRecord implements ConnectionRecord {
+public class MariaDBConnectionRecord implements ConnectionRecord {
 
     /**
      * The start date of the ConnectionRecord.
@@ -54,7 +54,7 @@ public class mariaDBConnectionRecord implements ConnectionRecord {
     private boolean active;
     
     /**
-     * Initialize this mariaDBConnectionRecord with the start/end dates,
+     * Initialize this MariaDBConnectionRecord with the start/end dates,
      * and the name of the user it represents.
      *
      * @param startDate The start date of the connection history.
@@ -62,7 +62,7 @@ public class mariaDBConnectionRecord implements ConnectionRecord {
      * @param username The name of the user that used the connection.
      * @param active Whether the connection is currently active.
      */
-    public mariaDBConnectionRecord(Date startDate, Date endDate,
+    public MariaDBConnectionRecord(Date startDate, Date endDate,
             String username, boolean active) {
         if (startDate != null) this.startDate = new Date(startDate.getTime());
         if (endDate != null) this.endDate = new Date(endDate.getTime());

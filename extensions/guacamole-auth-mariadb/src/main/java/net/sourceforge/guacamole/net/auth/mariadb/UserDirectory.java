@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package net.sourceforge.guacamole.net.auth.mariaDB;
+package net.sourceforge.guacamole.net.auth.MariaDB;
 
 
 import com.google.common.base.Preconditions;
@@ -36,22 +36,22 @@ import org.glyptodon.guacamole.GuacamoleException;
 import org.glyptodon.guacamole.GuacamoleSecurityException;
 import org.glyptodon.guacamole.net.auth.Directory;
 import org.glyptodon.guacamole.net.auth.User;
-import net.sourceforge.guacamole.net.auth.mariaDB.dao.ConnectionGroupPermissionMapper;
-import net.sourceforge.guacamole.net.auth.mariaDB.dao.ConnectionPermissionMapper;
-import net.sourceforge.guacamole.net.auth.mariaDB.dao.SystemPermissionMapper;
-import net.sourceforge.guacamole.net.auth.mariaDB.dao.UserPermissionMapper;
-import net.sourceforge.guacamole.net.auth.mariaDB.model.ConnectionGroupPermissionExample;
-import net.sourceforge.guacamole.net.auth.mariaDB.model.ConnectionGroupPermissionKey;
-import net.sourceforge.guacamole.net.auth.mariaDB.model.ConnectionPermissionExample;
-import net.sourceforge.guacamole.net.auth.mariaDB.model.ConnectionPermissionKey;
-import net.sourceforge.guacamole.net.auth.mariaDB.model.SystemPermissionExample;
-import net.sourceforge.guacamole.net.auth.mariaDB.model.SystemPermissionKey;
-import net.sourceforge.guacamole.net.auth.mariaDB.model.UserPermissionExample;
-import net.sourceforge.guacamole.net.auth.mariaDB.model.UserPermissionKey;
-import net.sourceforge.guacamole.net.auth.mariaDB.service.ConnectionGroupService;
-import net.sourceforge.guacamole.net.auth.mariaDB.service.ConnectionService;
-import net.sourceforge.guacamole.net.auth.mariaDB.service.PermissionCheckService;
-import net.sourceforge.guacamole.net.auth.mariaDB.service.UserService;
+import net.sourceforge.guacamole.net.auth.mariadb.dao.ConnectionGroupPermissionMapper;
+import net.sourceforge.guacamole.net.auth.mariadb.dao.ConnectionPermissionMapper;
+import net.sourceforge.guacamole.net.auth.mariadb.dao.SystemPermissionMapper;
+import net.sourceforge.guacamole.net.auth.mariadb.dao.UserPermissionMapper;
+import net.sourceforge.guacamole.net.auth.mariadb.model.ConnectionGroupPermissionExample;
+import net.sourceforge.guacamole.net.auth.mariadb.model.ConnectionGroupPermissionKey;
+import net.sourceforge.guacamole.net.auth.mariadb.model.ConnectionPermissionExample;
+import net.sourceforge.guacamole.net.auth.mariadb.model.ConnectionPermissionKey;
+import net.sourceforge.guacamole.net.auth.mariadb.model.SystemPermissionExample;
+import net.sourceforge.guacamole.net.auth.mariadb.model.SystemPermissionKey;
+import net.sourceforge.guacamole.net.auth.mariadb.model.UserPermissionExample;
+import net.sourceforge.guacamole.net.auth.mariadb.model.UserPermissionKey;
+import net.sourceforge.guacamole.net.auth.mariadb.service.ConnectionGroupService;
+import net.sourceforge.guacamole.net.auth.mariadb.service.ConnectionService;
+import net.sourceforge.guacamole.net.auth.mariadb.service.PermissionCheckService;
+import net.sourceforge.guacamole.net.auth.mariadb.service.UserService;
 import org.glyptodon.guacamole.GuacamoleUnsupportedException;
 import org.glyptodon.guacamole.net.auth.permission.ConnectionGroupPermission;
 import org.glyptodon.guacamole.net.auth.permission.ConnectionPermission;
@@ -61,7 +61,7 @@ import org.glyptodon.guacamole.net.auth.permission.UserPermission;
 import org.mybatis.guice.transactional.Transactional;
 
 /**
- * A mariaDB based implementation of the User Directory.
+ * A MariaDB based implementation of the User Directory.
  * @author James Muehlner
  */
 public class UserDirectory implements Directory<String, User> {
@@ -137,7 +137,7 @@ public class UserDirectory implements Directory<String, User> {
             throws GuacamoleException {
 
         // Get user
-        mariaDBUser user = userService.retrieveUser(identifier);
+        MariaDBUser user = userService.retrieveUser(identifier);
         
         if(user == null)
             return null;
@@ -145,7 +145,7 @@ public class UserDirectory implements Directory<String, User> {
         // Verify access is granted
         permissionCheckService.verifyUserAccess(currentUser,
                 user.getUserID(),
-                mariaDBConstants.USER_READ);
+                MariaDBConstants.USER_READ);
 
         // Return user
         return user;
@@ -156,7 +156,7 @@ public class UserDirectory implements Directory<String, User> {
     @Override
     public Set<String> getIdentifiers() throws GuacamoleException {
         return permissionCheckService.retrieveUsernames(currentUser,
-                mariaDBConstants.USER_READ);
+                MariaDBConstants.USER_READ);
     }
 
     @Override
@@ -170,16 +170,16 @@ public class UserDirectory implements Directory<String, User> {
 
         // Verify current user has permission to create users
         permissionCheckService.verifySystemAccess(currentUser,
-                mariaDBConstants.SYSTEM_USER_CREATE);
+                MariaDBConstants.SYSTEM_USER_CREATE);
         Preconditions.checkNotNull(object);
 
         // Verify that no user already exists with this username.
-        mariaDBUser previousUser = userService.retrieveUser(username);
+        MariaDBUser previousUser = userService.retrieveUser(username);
         if(previousUser != null)
             throw new GuacamoleClientException("That username is already in use.");
 
         // Create new user
-        mariaDBUser user = userService.createUser(username, object.getPassword());
+        MariaDBUser user = userService.createUser(username, object.getPassword());
 
         // Create permissions of new user in database
         createPermissions(user.getUserID(), object.getPermissions());
@@ -190,19 +190,19 @@ public class UserDirectory implements Directory<String, User> {
         newUserPermission.setAffected_user_id(user.getUserID());
 
         // READ permission on new user
-        newUserPermission.setPermission(mariaDBConstants.USER_READ);
+        newUserPermission.setPermission(MariaDBConstants.USER_READ);
         userPermissionDAO.insert(newUserPermission);
 
         // UPDATE permission on new user
-        newUserPermission.setPermission(mariaDBConstants.USER_UPDATE);
+        newUserPermission.setPermission(MariaDBConstants.USER_UPDATE);
         userPermissionDAO.insert(newUserPermission);
 
         // DELETE permission on new user
-        newUserPermission.setPermission(mariaDBConstants.USER_DELETE);
+        newUserPermission.setPermission(MariaDBConstants.USER_DELETE);
         userPermissionDAO.insert(newUserPermission);
 
         // ADMINISTER permission on new user
-        newUserPermission.setPermission(mariaDBConstants.USER_ADMINISTER);
+        newUserPermission.setPermission(MariaDBConstants.USER_ADMINISTER);
         userPermissionDAO.insert(newUserPermission);
 
     }
@@ -306,7 +306,7 @@ public class UserDirectory implements Directory<String, User> {
         // Get list of administerable user IDs
         List<Integer> administerableUserIDs =
             permissionCheckService.retrieveUserIDs(currentUser,
-                mariaDBConstants.USER_ADMINISTER);
+                MariaDBConstants.USER_ADMINISTER);
 
         // Get set of usernames corresponding to administerable users
         Map<String, Integer> administerableUsers =
@@ -330,7 +330,7 @@ public class UserDirectory implements Directory<String, User> {
             // Create new permission
             UserPermissionKey newPermission = new UserPermissionKey();
             newPermission.setUser_id(currentUser.getUserID());
-            newPermission.setPermission(mariaDBConstants.getUserConstant(permission.getType()));
+            newPermission.setPermission(MariaDBConstants.getUserConstant(permission.getType()));
             newPermission.setAffected_user_id(affected_id);
             userPermissionDAO.insert(newPermission);
 
@@ -358,7 +358,7 @@ public class UserDirectory implements Directory<String, User> {
         // Get list of administerable user IDs
         List<Integer> administerableUserIDs =
             permissionCheckService.retrieveUserIDs(currentUser,
-                mariaDBConstants.USER_ADMINISTER);
+                MariaDBConstants.USER_ADMINISTER);
 
         // Get set of usernames corresponding to administerable users
         Map<String, Integer> administerableUsers =
@@ -383,7 +383,7 @@ public class UserDirectory implements Directory<String, User> {
             UserPermissionExample userPermissionExample = new UserPermissionExample();
             userPermissionExample.createCriteria()
                 .andUser_idEqualTo(user_id)
-                .andPermissionEqualTo(mariaDBConstants.getUserConstant(permission.getType()))
+                .andPermissionEqualTo(MariaDBConstants.getUserConstant(permission.getType()))
                 .andAffected_user_idEqualTo(affected_id);
             userPermissionDAO.deleteByExample(userPermissionExample);
 
@@ -412,7 +412,7 @@ public class UserDirectory implements Directory<String, User> {
         // Get list of administerable connection IDs
         Set<Integer> administerableConnectionIDs = Sets.<Integer>newHashSet(
             permissionCheckService.retrieveConnectionIDs(currentUser,
-                mariaDBConstants.CONNECTION_ADMINISTER));
+                MariaDBConstants.CONNECTION_ADMINISTER));
 
         // Insert all given permissions
         for (ConnectionPermission permission : permissions) {
@@ -431,7 +431,7 @@ public class UserDirectory implements Directory<String, User> {
             // Create new permission
             ConnectionPermissionKey newPermission = new ConnectionPermissionKey();
             newPermission.setUser_id(user_id);
-            newPermission.setPermission(mariaDBConstants.getConnectionConstant(permission.getType()));
+            newPermission.setPermission(MariaDBConstants.getConnectionConstant(permission.getType()));
             newPermission.setConnection_id(connection_id);
             connectionPermissionDAO.insert(newPermission);
 
@@ -459,7 +459,7 @@ public class UserDirectory implements Directory<String, User> {
         // Get list of administerable connection group IDs
         Set<Integer> administerableConnectionGroupIDs = Sets.<Integer>newHashSet(
             permissionCheckService.retrieveConnectionGroupIDs(currentUser,
-                mariaDBConstants.CONNECTION_GROUP_ADMINISTER));
+                MariaDBConstants.CONNECTION_GROUP_ADMINISTER));
 
         // Insert all given permissions
         for (ConnectionGroupPermission permission : permissions) {
@@ -478,7 +478,7 @@ public class UserDirectory implements Directory<String, User> {
             // Create new permission
             ConnectionGroupPermissionKey newPermission = new ConnectionGroupPermissionKey();
             newPermission.setUser_id(user_id);
-            newPermission.setPermission(mariaDBConstants.getConnectionGroupConstant(permission.getType()));
+            newPermission.setPermission(MariaDBConstants.getConnectionGroupConstant(permission.getType()));
             newPermission.setConnection_group_id(connection_group_id);
             connectionGroupPermissionDAO.insert(newPermission);
 
@@ -505,7 +505,7 @@ public class UserDirectory implements Directory<String, User> {
         // Get list of administerable connection IDs
         Set<Integer> administerableConnectionIDs = Sets.<Integer>newHashSet(
             permissionCheckService.retrieveConnectionIDs(currentUser,
-                mariaDBConstants.CONNECTION_ADMINISTER));
+                MariaDBConstants.CONNECTION_ADMINISTER));
 
         // Delete requested permissions
         for (ConnectionPermission permission : permissions) {
@@ -524,7 +524,7 @@ public class UserDirectory implements Directory<String, User> {
             ConnectionPermissionExample connectionPermissionExample = new ConnectionPermissionExample();
             connectionPermissionExample.createCriteria()
                 .andUser_idEqualTo(user_id)
-                .andPermissionEqualTo(mariaDBConstants.getConnectionConstant(permission.getType()))
+                .andPermissionEqualTo(MariaDBConstants.getConnectionConstant(permission.getType()))
                 .andConnection_idEqualTo(connection_id);
             connectionPermissionDAO.deleteByExample(connectionPermissionExample);
 
@@ -552,7 +552,7 @@ public class UserDirectory implements Directory<String, User> {
         // Get list of administerable connection group IDs
         Set<Integer> administerableConnectionGroupIDs = Sets.<Integer>newHashSet(
             permissionCheckService.retrieveConnectionGroupIDs(currentUser,
-                mariaDBConstants.CONNECTION_GROUP_ADMINISTER));
+                MariaDBConstants.CONNECTION_GROUP_ADMINISTER));
 
         // Delete requested permissions
         for (ConnectionGroupPermission permission : permissions) {
@@ -571,7 +571,7 @@ public class UserDirectory implements Directory<String, User> {
             ConnectionGroupPermissionExample connectionGroupPermissionExample = new ConnectionGroupPermissionExample();
             connectionGroupPermissionExample.createCriteria()
                 .andUser_idEqualTo(user_id)
-                .andPermissionEqualTo(mariaDBConstants.getConnectionGroupConstant(permission.getType()))
+                .andPermissionEqualTo(MariaDBConstants.getConnectionGroupConstant(permission.getType()))
                 .andConnection_group_idEqualTo(connection_group_id);
             connectionGroupPermissionDAO.deleteByExample(connectionGroupPermissionExample);
 
@@ -606,7 +606,7 @@ public class UserDirectory implements Directory<String, User> {
             // Insert permission
             SystemPermissionKey newSystemPermission = new SystemPermissionKey();
             newSystemPermission.setUser_id(user_id);
-            newSystemPermission.setPermission(mariaDBConstants.getSystemConstant(permission.getType()));
+            newSystemPermission.setPermission(MariaDBConstants.getSystemConstant(permission.getType()));
             systemPermissionDAO.insert(newSystemPermission);
 
         }
@@ -638,7 +638,7 @@ public class UserDirectory implements Directory<String, User> {
         // Build list of requested system permissions
         List<String> systemPermissionTypes = new ArrayList<String>();
         for (SystemPermission permission : permissions)
-            systemPermissionTypes.add(mariaDBConstants.getSystemConstant(permission.getType()));
+            systemPermissionTypes.add(MariaDBConstants.getSystemConstant(permission.getType()));
 
         // Delete the requested system permissions for this user
         SystemPermissionExample systemPermissionExample = new SystemPermissionExample();
@@ -655,26 +655,26 @@ public class UserDirectory implements Directory<String, User> {
 
         // If user not actually from this auth provider, we can't handle updated
         // permissions.
-        if (!(object instanceof mariaDBUser))
+        if (!(object instanceof MariaDBUser))
             throw new GuacamoleUnsupportedException("User not from database.");
 
-        mariaDBUser mariaDBUser = (mariaDBUser) object;
+        MariaDBUser MariaDBUser = (MariaDBUser) object;
 
         // Validate permission to update this user is granted
         permissionCheckService.verifyUserAccess(currentUser,
-                mariaDBUser.getUserID(),
-                mariaDBConstants.USER_UPDATE);
+                MariaDBUser.getUserID(),
+                MariaDBConstants.USER_UPDATE);
 
         // Update the user in the database
-        userService.updateUser(mariaDBUser);
+        userService.updateUser(MariaDBUser);
 
         // Update permissions in database
-        createPermissions(mariaDBUser.getUserID(), mariaDBUser.getNewPermissions());
-        removePermissions(mariaDBUser.getUserID(), mariaDBUser.getRemovedPermissions());
+        createPermissions(MariaDBUser.getUserID(), MariaDBUser.getNewPermissions());
+        removePermissions(MariaDBUser.getUserID(), MariaDBUser.getRemovedPermissions());
 
         // The appropriate permissions have been inserted and deleted, so
         // reset the new and removed permission sets.
-        mariaDBUser.resetPermissions();
+        MariaDBUser.resetPermissions();
 
     }
 
@@ -683,7 +683,7 @@ public class UserDirectory implements Directory<String, User> {
     public void remove(String identifier) throws GuacamoleException {
 
         // Get user pending deletion
-        mariaDBUser user = userService.retrieveUser(identifier);
+        MariaDBUser user = userService.retrieveUser(identifier);
 
         // Prevent self-deletion
         if (user.getUserID() == currentUser.getUserID())
@@ -692,7 +692,7 @@ public class UserDirectory implements Directory<String, User> {
         // Validate current user has permission to remove the specified user
         permissionCheckService.verifyUserAccess(currentUser,
                 user.getUserID(),
-                mariaDBConstants.USER_DELETE);
+                MariaDBConstants.USER_DELETE);
 
         // Delete specified user
         userService.deleteUser(user.getUserID());

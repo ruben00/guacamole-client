@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package net.sourceforge.guacamole.net.auth.mariaDB;
+package net.sourceforge.guacamole.net.auth.MariaDB;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -31,10 +31,10 @@ import org.glyptodon.guacamole.net.auth.User;
 import org.glyptodon.guacamole.net.auth.permission.Permission;
 
 /**
- * A mariaDB based implementation of the User object.
+ * A MariaDB based implementation of the User object.
  * @author James Muehlner
  */
-public class mariaDBUser extends AbstractUser {
+public class MariaDBUser extends AbstractUser {
 
     /**
      * The ID of this user in the database, if any.
@@ -57,22 +57,22 @@ public class mariaDBUser extends AbstractUser {
     private Set<Permission> removedPermissions = new HashSet<Permission>();
 
     /**
-     * Creates a new, empty mariaDBUser.
+     * Creates a new, empty MariaDBUser.
      */
-    public mariaDBUser() {
+    public MariaDBUser() {
     }
 
     /**
-     * Initializes a new mariaDBUser having the given username.
+     * Initializes a new MariaDBUser having the given username.
      *
-     * @param name The name to assign to this mariaDBUser.
+     * @param name The name to assign to this MariaDBUser.
      */
     public void init(String name) {
         init(null, name, null, Collections.EMPTY_SET);
     }
 
     /**
-     * Initializes a new mariaDBUser, copying all data from the given user
+     * Initializes a new MariaDBUser, copying all data from the given user
      * object.
      *
      * @param user The user object to copy.
@@ -84,7 +84,7 @@ public class mariaDBUser extends AbstractUser {
     }
 
     /**
-     * Initializes a new mariaDBUser initialized from the given data from the
+     * Initializes a new MariaDBUser initialized from the given data from the
      * database.
      *
      * @param userID The ID of the user in the database, if any.

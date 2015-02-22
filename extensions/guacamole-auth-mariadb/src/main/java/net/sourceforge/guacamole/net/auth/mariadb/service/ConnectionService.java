@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package net.sourceforge.guacamole.net.auth.mariaDB.service;
+package net.sourceforge.guacamole.net.auth.mariadb.service;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
@@ -34,22 +34,22 @@ import org.glyptodon.guacamole.GuacamoleException;
 import org.glyptodon.guacamole.net.GuacamoleSocket;
 import org.glyptodon.guacamole.net.InetGuacamoleSocket;
 import org.glyptodon.guacamole.net.SSLGuacamoleSocket;
-import net.sourceforge.guacamole.net.auth.mariaDB.ActiveConnectionMap;
-import net.sourceforge.guacamole.net.auth.mariaDB.AuthenticatedUser;
-import net.sourceforge.guacamole.net.auth.mariaDB.mariaDBConnection;
-import net.sourceforge.guacamole.net.auth.mariaDB.mariaDBConnectionRecord;
-import net.sourceforge.guacamole.net.auth.mariaDB.mariaDBGuacamoleSocket;
-import net.sourceforge.guacamole.net.auth.mariaDB.dao.ConnectionHistoryMapper;
-import net.sourceforge.guacamole.net.auth.mariaDB.dao.ConnectionMapper;
-import net.sourceforge.guacamole.net.auth.mariaDB.dao.ConnectionParameterMapper;
-import net.sourceforge.guacamole.net.auth.mariaDB.model.Connection;
-import net.sourceforge.guacamole.net.auth.mariaDB.model.ConnectionExample;
-import net.sourceforge.guacamole.net.auth.mariaDB.model.ConnectionExample.Criteria;
-import net.sourceforge.guacamole.net.auth.mariaDB.model.ConnectionHistory;
-import net.sourceforge.guacamole.net.auth.mariaDB.model.ConnectionHistoryExample;
-import net.sourceforge.guacamole.net.auth.mariaDB.model.ConnectionParameter;
-import net.sourceforge.guacamole.net.auth.mariaDB.model.ConnectionParameterExample;
-import net.sourceforge.guacamole.net.auth.mariaDB.properties.mariaDBGuacamoleProperties;
+import net.sourceforge.guacamole.net.auth.mariadb.ActiveConnectionMap;
+import net.sourceforge.guacamole.net.auth.mariadb.AuthenticatedUser;
+import net.sourceforge.guacamole.net.auth.mariadb.MariaDBConnection;
+import net.sourceforge.guacamole.net.auth.mariadb.MariaDBConnectionRecord;
+import net.sourceforge.guacamole.net.auth.mariadb.MariaDBGuacamoleSocket;
+import net.sourceforge.guacamole.net.auth.mariadb.dao.ConnectionHistoryMapper;
+import net.sourceforge.guacamole.net.auth.mariadb.dao.ConnectionMapper;
+import net.sourceforge.guacamole.net.auth.mariadb.dao.ConnectionParameterMapper;
+import net.sourceforge.guacamole.net.auth.mariadb.model.Connection;
+import net.sourceforge.guacamole.net.auth.mariadb.model.ConnectionExample;
+import net.sourceforge.guacamole.net.auth.mariadb.model.ConnectionExample.Criteria;
+import net.sourceforge.guacamole.net.auth.mariadb.model.ConnectionHistory;
+import net.sourceforge.guacamole.net.auth.mariadb.model.ConnectionHistoryExample;
+import net.sourceforge.guacamole.net.auth.mariadb.model.ConnectionParameter;
+import net.sourceforge.guacamole.net.auth.mariadb.model.ConnectionParameterExample;
+import net.sourceforge.guacamole.net.auth.mariadb.properties.MariaDBGuacamoleProperties;
 import org.glyptodon.guacamole.properties.GuacamoleProperties;
 import org.glyptodon.guacamole.protocol.ConfiguredGuacamoleSocket;
 import org.glyptodon.guacamole.protocol.GuacamoleClientInformation;
@@ -87,16 +87,16 @@ public class ConnectionService {
     private ConnectionHistoryMapper connectionHistoryDAO;
 
     /**
-     * Provider which creates mariaDBConnections.
+     * Provider which creates MariaDBConnections.
      */
     @Inject
-    private Provider<mariaDBConnection> mariaDBConnectionProvider;
+    private Provider<MariaDBConnection> MariaDBConnectionProvider;
 
     /**
-     * Provider which creates mariaDBGuacamoleSockets.
+     * Provider which creates MariaDBGuacamoleSockets.
      */
     @Inject
-    private Provider<mariaDBGuacamoleSocket> mariaDBGuacamoleSocketProvider;
+    private Provider<MariaDBGuacamoleSocket> MariaDBGuacamoleSocketProvider;
 
     /**
      * Map of all currently active connections.
@@ -126,7 +126,7 @@ public class ConnectionService {
      *     The connection having the given name, or null if no such
      *     connection could be found.
      */
-    public mariaDBConnection retrieveConnection(String name, Integer parentID,
+    public MariaDBConnection retrieveConnection(String name, Integer parentID,
             AuthenticatedUser currentUser) {
 
         // Create criteria
@@ -146,7 +146,7 @@ public class ConnectionService {
             return null;
 
         // Otherwise, return found connection
-        return tomariaDBConnection(connections.get(0), currentUser);
+        return toMariaDBConnection(connections.get(0), currentUser);
 
     }
 
@@ -164,9 +164,9 @@ public class ConnectionService {
      *     The connection having the given unique identifier, or null if no
      *     such connection was found.
      */
-    public mariaDBConnection retrieveConnection(String uniqueIdentifier, AuthenticatedUser currentUser) {
+    public MariaDBConnection retrieveConnection(String uniqueIdentifier, AuthenticatedUser currentUser) {
 
-        // The unique identifier for a mariaDBConnection is the database ID
+        // The unique identifier for a MariaDBConnection is the database ID
         int connectionID;
         try {
             connectionID = Integer.parseInt(uniqueIdentifier);
@@ -191,7 +191,7 @@ public class ConnectionService {
      *     The connection having the given ID, or null if no such connection
      *     was found.
      */
-    public mariaDBConnection retrieveConnection(int id, AuthenticatedUser currentUser) {
+    public MariaDBConnection retrieveConnection(int id, AuthenticatedUser currentUser) {
 
         // Query connection by ID
         Connection connection = connectionDAO.selectByPrimaryKey(id);
@@ -201,7 +201,7 @@ public class ConnectionService {
             return null;
 
         // Otherwise, return found connection
-        return tomariaDBConnection(connection, currentUser);
+        return toMariaDBConnection(connection, currentUser);
     }
     
     /**
@@ -234,9 +234,9 @@ public class ConnectionService {
     }
 
     /**
-     * Convert the given database-retrieved Connection into a mariaDBConnection.
+     * Convert the given database-retrieved Connection into a MariaDBConnection.
      * The parameters of the given connection will be read and added to the
-     * mariaDBConnection in the process.
+     * MariaDBConnection in the process.
      *
      * @param connection
      *     The connection to convert.
@@ -244,10 +244,10 @@ public class ConnectionService {
      * @param currentUser
      *     The user who queried this connection.
      *
-     * @return A new mariaDBConnection containing all data associated with the
+     * @return A new MariaDBConnection containing all data associated with the
      *         specified connection.
      */
-    private mariaDBConnection tomariaDBConnection(Connection connection, AuthenticatedUser currentUser) {
+    private MariaDBConnection toMariaDBConnection(Connection connection, AuthenticatedUser currentUser) {
 
         // Build configuration
         GuacamoleConfiguration config = new GuacamoleConfiguration();
@@ -266,9 +266,9 @@ public class ConnectionService {
             config.setParameter(parameter.getParameter_name(),
                     parameter.getParameter_value());
 
-        // Create new mariaDBConnection from retrieved data
-        mariaDBConnection mariaDBConnection = mariaDBConnectionProvider.get();
-        mariaDBConnection.init(
+        // Create new MariaDBConnection from retrieved data
+        MariaDBConnection MariaDBConnection = MariaDBConnectionProvider.get();
+        MariaDBConnection.init(
             connection.getConnection_id(),
             connection.getParent_id(),
             connection.getConnection_name(),
@@ -278,7 +278,7 @@ public class ConnectionService {
             currentUser
         );
 
-        return mariaDBConnection;
+        return MariaDBConnection;
 
     }
 
@@ -286,10 +286,10 @@ public class ConnectionService {
      * Retrieves the history of the connection having the given ID.
      *
      * @param connectionID The ID of the connection to retrieve the history of.
-     * @return A list of mariaDBConnectionRecord documenting the history of this
+     * @return A list of MariaDBConnectionRecord documenting the history of this
      *         connection.
      */
-    public List<mariaDBConnectionRecord> retrieveHistory(int connectionID) {
+    public List<MariaDBConnectionRecord> retrieveHistory(int connectionID) {
 
         // Retrieve history records relating to given connection ID
         ConnectionHistoryExample example = new ConnectionHistoryExample();
@@ -306,7 +306,7 @@ public class ConnectionService {
                 connectionHistoryDAO.selectByExampleWithRowbounds(example, rowBounds);
 
         // Convert history entries to connection records
-        List<mariaDBConnectionRecord> connectionRecords = new ArrayList<mariaDBConnectionRecord>();
+        List<MariaDBConnectionRecord> connectionRecords = new ArrayList<MariaDBConnectionRecord>();
         Set<Integer> userIDSet = new HashSet<Integer>();
         for(ConnectionHistory history : connectionHistories) {
             userIDSet.add(history.getUser_id());
@@ -327,16 +327,16 @@ public class ConnectionService {
 
             // If there are active users, list the top N not-ended connections
             // as active (best guess)
-            mariaDBConnectionRecord connectionRecord;
+            MariaDBConnectionRecord connectionRecord;
             if (user_count > 0 && endDate == null) {
-                connectionRecord = new mariaDBConnectionRecord(startDate, endDate, username, true);
+                connectionRecord = new MariaDBConnectionRecord(startDate, endDate, username, true);
                 user_count--;
             }
 
             // If no active users, or end date is recorded, connection is not
             // active.
             else
-                connectionRecord = new mariaDBConnectionRecord(startDate, endDate, username, false);
+                connectionRecord = new MariaDBConnectionRecord(startDate, endDate, username, false);
 
             connectionRecords.add(connectionRecord);
 
@@ -348,7 +348,7 @@ public class ConnectionService {
     
 
     /**
-     * Create a mariaDBGuacamoleSocket using the provided connection.
+     * Create a MariaDBGuacamoleSocket using the provided connection.
      *
      * @param connection
      *     The connection to use when connecting the socket.
@@ -369,7 +369,7 @@ public class ConnectionService {
      * @throws GuacamoleException
      *     If an error occurs while connecting the socket.
      */
-    public mariaDBGuacamoleSocket connect(mariaDBConnection connection,
+    public MariaDBGuacamoleSocket connect(MariaDBConnection connection,
             GuacamoleClientInformation info, AuthenticatedUser currentUser,
             Integer connectionGroupID)
         throws GuacamoleException {
@@ -379,12 +379,12 @@ public class ConnectionService {
             // If the given connection is active, and multiple simultaneous
             // connections are not allowed, disallow connection
             if(GuacamoleProperties.getProperty(
-                    mariaDBGuacamoleProperties.mariaDB_DISALLOW_SIMULTANEOUS_CONNECTIONS, false)
+                    MariaDBGuacamoleProperties.MariaDB_DISALLOW_SIMULTANEOUS_CONNECTIONS, false)
                     && activeConnectionMap.isActive(connection.getConnectionID()))
                 throw new GuacamoleResourceConflictException("Cannot connect. This connection is in use.");
             
             if(GuacamoleProperties.getProperty(
-                    mariaDBGuacamoleProperties.mariaDB_DISALLOW_DUPLICATE_CONNECTIONS, true)
+                    MariaDBGuacamoleProperties.MariaDB_DISALLOW_DUPLICATE_CONNECTIONS, true)
                     && activeConnectionMap.isConnectionUserActive(connection.getConnectionID(), currentUser.getUserID()))
                 throw new GuacamoleClientTooManyException
                         ("Cannot connect. Connection already in use by this user.");
@@ -418,11 +418,11 @@ public class ConnectionService {
             int historyID = activeConnectionMap.openConnection(connection.getConnectionID(), 
                     currentUser.getUserID(), connectionGroupID);
 
-                // Return new mariaDBGuacamoleSocket
-            mariaDBGuacamoleSocket mariaDBGuacamoleSocket = mariaDBGuacamoleSocketProvider.get();
-            mariaDBGuacamoleSocket.init(socket, historyID, connectionGroupID);
+                // Return new MariaDBGuacamoleSocket
+            MariaDBGuacamoleSocket MariaDBGuacamoleSocket = MariaDBGuacamoleSocketProvider.get();
+            MariaDBGuacamoleSocket.init(socket, historyID, connectionGroupID);
                 
-            return mariaDBGuacamoleSocket;
+            return MariaDBGuacamoleSocket;
 
         }
 
@@ -444,10 +444,10 @@ public class ConnectionService {
      *     The ID of the parent connection group.
      *
      * @return
-     *     A new mariaDBConnection containing the data of the newly created
+     *     A new MariaDBConnection containing the data of the newly created
      *     connection.
      */
-    public mariaDBConnection createConnection(String name, String protocol,
+    public MariaDBConnection createConnection(String name, String protocol,
             AuthenticatedUser currentUser, Integer parentID) {
 
         // Initialize database connection
@@ -458,7 +458,7 @@ public class ConnectionService {
 
         // Create connection
         connectionDAO.insert(connection);
-        return tomariaDBConnection(connection, currentUser);
+        return toMariaDBConnection(connection, currentUser);
 
     }
 
@@ -472,19 +472,19 @@ public class ConnectionService {
 
     /**
      * Updates the connection in the database corresponding to the given
-     * mariaDBConnection.
+     * MariaDBConnection.
      *
-     * @param mariaDBConnection The mariaDBConnection to update (save) to the
+     * @param MariaDBConnection The MariaDBConnection to update (save) to the
      *                        database. This connection must already exist.
      */
-    public void updateConnection(mariaDBConnection mariaDBConnection) {
+    public void updateConnection(MariaDBConnection MariaDBConnection) {
 
         // Populate connection
         Connection connection = new Connection();
-        connection.setConnection_id(mariaDBConnection.getConnectionID());
-        connection.setParent_id(mariaDBConnection.getParentID());
-        connection.setConnection_name(mariaDBConnection.getName());
-        connection.setProtocol(mariaDBConnection.getConfiguration().getProtocol());
+        connection.setConnection_id(MariaDBConnection.getConnectionID());
+        connection.setParent_id(MariaDBConnection.getParentID());
+        connection.setConnection_name(MariaDBConnection.getName());
+        connection.setProtocol(MariaDBConnection.getConfiguration().getProtocol());
 
         // Update the connection in the database
         connectionDAO.updateByPrimaryKey(connection);
