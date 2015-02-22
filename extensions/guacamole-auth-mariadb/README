@@ -17,35 +17,35 @@ Distribution-specific documentation is provided on the Guacamole wiki:
 
 
 ------------------------------------------------------------
- What is guacamole-auth-mysql?
+ What is guacamole-auth-mariaDB?
 ------------------------------------------------------------
 
-guacamole-auth-ldap is a Java library for use with the Guacamole web
-application to provide MySQL based authentication.
+guacamole-auth-mariaDB is a Java library for use with the Guacamole web
+application to provide MariaDB based authentication.
 
-guacamole-auth-mysql provides an authentication provider which can be
-set in guacamole.properties to allow MySQL authentication of Guacamole
-users. Additional properties are required to configure the mysql
+guacamole-auth-mariaDB provides an authentication provider which can be
+set in guacamole.properties to allow MariaDB authentication of Guacamole
+users. Additional properties are required to configure the mariaDB
 connection parameters.
 
 A schema file are provided to create the required tables in your
-mysql database.
+mariaDB database.
 
 
 ------------------------------------------------------------
- Compiling and installing guacamole-auth-mysql
+ Compiling and installing guacamole-auth-mariaDB
 ------------------------------------------------------------
 
-guacamole-auth-mysql is built using Maven. Building guacamole-auth-mysql
+guacamole-auth-mariaDB is built using Maven. Building guacamole-auth-mariaDB
 compiles all classes and packages them into a redistributable .jar file. This
 .jar file can be installed in the library directory configured in
 guacamole.properties such that the authentication provider is available.
 
-1) Set up a MySQL database with the Guacamole schema.
+1) Set up a mariaDB database with the Guacamole schema.
 
-    When guacamole-auth-mysql is compiling, it needs to generate source
+    When guacamole-auth-mariaDB is compiling, it needs to generate source
     based on a database schema. Because the source generator uses a
-    connection to an actual database to do this, you must have a MySQL
+    connection to an actual database to do this, you must have a mariaDB
     database running with the Guacamole schema set up.
 
     First, create a database. For the sake of these instructions, we will
@@ -132,32 +132,32 @@ guacamole.properties such that the authentication provider is available.
     guacamole.properties, you will need to specify one. The directory
     is specified using the "lib-directory" property.
 
-5) Set up your MySQL database to authenticate Guacamole users
+5) Set up your mariaDB database to authenticate Guacamole users
 
     A schema file is provided in the schema directory for creating
-    the guacamole authentication tables in your MySQL database.
+    the guacamole authentication tables in your mariaDB database.
 
     Additionally, a script is provided to create a default admin user
     with username 'guacadmin' and password 'guacadmin'. This user can 
     be used to set up any other connections and users.
 
-6) Configure guacamole.properties for MySQL
+6) Configure guacamole.properties for mariaDB
 
-    There are additional properties required by the MySQL JDBC driver
+    There are additional properties required by the mariaDB JDBC driver
     which must be added/changed in your guacamole.properties:
 
-    # Configuration for MySQL connection
-    mysql-hostname:           mysql.host.name
-    mysql-port:               3306
-    mysql-database:           guacamole.database.name
-    mysql-username:           user
-    mysql-password:           pass
+    # Configuration for mariaDB connection
+    mariaDB-hostname:           mariaDB.host.name
+    mariaDB-port:               3306
+    mariaDB-database:           guacamole.database.name
+    mariaDB-username:           user
+    mariaDB-password:           pass
 
     Optionally, the authentication provider can be configured
     not to allow multiple users to use the same connection
     at the same time:
 
-    mysql-disallow-simultaneous-connections: true
+    mariaDB-disallow-simultaneous-connections: true
 
 
 ------------------------------------------------------------
