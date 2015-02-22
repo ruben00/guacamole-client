@@ -33,7 +33,7 @@
 
         <!-- MariaDB JDBC driver class. -->
         <jdbcConnection driverClass="org.mariadb.jdbc.Driver"
-            connectionURL="jdbc:Mariadb://127.0.0.1:3306"
+            connectionURL="jdbc:mariadb://127.0.0.1:3306"
             userId="${guacamole.database.user}"
             password="${guacamole.database.password}"/>
 
