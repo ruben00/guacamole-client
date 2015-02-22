@@ -51,18 +51,18 @@ guacamole.properties such that the authentication provider is available.
     First, create a database. For the sake of these instructions, we will
     call the database "guacamole", and will run all scripts as the root user:
 
-    $ mariaDB -u root -p
+    $ mysql -u root -p
     Enter password:
-    mariaDB> CREATE DATABASE guacamole;
+    mysql> CREATE DATABASE guacamole;
     Query OK, 1 row affected (0.00 sec)
 
-    mariaDB> exit
+    mysql> exit
     Bye
 
     The schema files are in the schema/ subdirectory of the source. If run
     in order, they will create the schema and a default user:
 
-    $ cat schema/*.sql | mariaDB -u root -p guacamole
+    $ cat schema/*.sql | mysql -u root -p guacamole
 
 2) Set up your ~/.m2/settings.xml
 
