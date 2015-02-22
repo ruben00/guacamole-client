@@ -65,17 +65,12 @@
 
                 <!-- MariaDB Connector -->
                 <dependencies>
-                    <dependency>
-                        <groupId>MariaDB</groupId>
-                        <artifactId>MariaDB-connector-java</artifactId>
-                        <version>5.1.23</version>
-=======
-                        <groupId>org.mariadb.jdbc</groupId>
-                        <artifactId>mariadb-java-client</artifactId>
-                        <version>1.1.8</version>
->>>>>>> origin/master
-                    </dependency>
-                </dependencies>
+					<dependency>
+						<groupId>org.mariadb.jdbc</groupId>
+						<artifactId>mariadb-java-client</artifactId>
+						<version>1.1.8</version>
+						</dependency>                
+					</dependencies>
 
             </plugin>
 
