@@ -70,7 +70,7 @@ public class ConnectionGroupService {
      * Provider which creates MariaDBConnectionGroups.
      */
     @Inject
-    private Provider<MariaDBConnectionGroup> MariaDBConnectionGroupProvider;
+    private Provider<MariaDBConnectionGroup> mariadbConnectionGroupProvider;
     
     /**
      * The map of all active connections.
@@ -172,7 +172,7 @@ public class ConnectionGroupService {
 
         // This is the root connection group, so just create it here
         if(id == null) {
-            MariaDBConnectionGroup connectionGroup = MariaDBConnectionGroupProvider.get();
+            MariaDBConnectionGroup connectionGroup = mariadbConnectionGroupProvider.get();
             connectionGroup.init(null, null, 
                     MariaDBConstants.CONNECTION_GROUP_ROOT_IDENTIFIER, 
                     MariaDBConstants.CONNECTION_GROUP_ROOT_IDENTIFIER, 
@@ -230,13 +230,13 @@ public class ConnectionGroupService {
                 throw new GuacamoleResourceNotFoundException("No connections found in group.");
             
             if(GuacamoleProperties.getProperty(
-                    MariaDBGuacamoleProperties.MariaDB_DISALLOW_SIMULTANEOUS_CONNECTIONS, false)
+                    MariaDBGuacamoleProperties.MARIADB_DISALLOW_SIMULTANEOUS_CONNECTIONS, false)
                     && activeConnectionMap.isActive(leastUsedConnectionID))
                 throw new GuacamoleServerBusyException
                         ("Cannot connect. All connections are in use.");
             
             if(GuacamoleProperties.getProperty(
-                    MariaDBGuacamoleProperties.MariaDB_DISALLOW_DUPLICATE_CONNECTIONS, true)
+                    MariaDBGuacamoleProperties.MARIADB_DISALLOW_DUPLICATE_CONNECTIONS, true)
                     && activeConnectionMap.isConnectionGroupUserActive(group.getConnectionGroupID(), currentUser.getUserID()))
                 throw new GuacamoleClientTooManyException
                         ("Cannot connect. Connection group already in use by this user.");
@@ -330,17 +330,17 @@ public class ConnectionGroupService {
             AuthenticatedUser currentUser) {
 
         // Create new MariaDBConnection from retrieved data
-        MariaDBConnectionGroup MariaDBConnectionGroup = MariaDBConnectionGroupProvider.get();
+        MariaDBConnectionGroup mariaDBConnectionGroup = mariadbConnectionGroupProvider.get();
         
-        String MariaDBType = connectionGroup.getType();
+        String mariaDBType = connectionGroup.getType();
         org.glyptodon.guacamole.net.auth.ConnectionGroup.Type authType;
         
-        if(MariaDBType.equals(MariaDBConstants.CONNECTION_GROUP_ORGANIZATIONAL))
+        if(mariaDBType.equals(MariaDBConstants.CONNECTION_GROUP_ORGANIZATIONAL))
             authType = org.glyptodon.guacamole.net.auth.ConnectionGroup.Type.ORGANIZATIONAL;
         else
             authType = org.glyptodon.guacamole.net.auth.ConnectionGroup.Type.BALANCING;
         
-        MariaDBConnectionGroup.init(
+        mariaDBConnectionGroup.init(
             connectionGroup.getConnection_group_id(),
             connectionGroup.getParent_id(),
             connectionGroup.getConnection_group_name(),
@@ -349,7 +349,7 @@ public class ConnectionGroupService {
             currentUser
         );
 
-        return MariaDBConnectionGroup;
+        return mariaDBConnectionGroup;
 
     }
 
@@ -410,19 +410,19 @@ public class ConnectionGroupService {
      * Updates the connection group in the database corresponding to the given
      * MariaDBConnectionGroup.
      *
-     * @param MariaDBConnectionGroup The MariaDBConnectionGroup to update (save) 
+     * @param mariaDBConnectionGroup The MariaDBConnectionGroup to update (save) 
      *                             to the database. 
      *                             This connection must already exist.
      */
-    public void updateConnectionGroup(MariaDBConnectionGroup MariaDBConnectionGroup) {
+    public void updateConnectionGroup(MariaDBConnectionGroup mariaDBConnectionGroup) {
 
         // Populate connection
         ConnectionGroup connectionGroup = new ConnectionGroup();
-        connectionGroup.setConnection_group_id(MariaDBConnectionGroup.getConnectionGroupID());
-        connectionGroup.setParent_id(MariaDBConnectionGroup.getParentID());
-        connectionGroup.setConnection_group_name(MariaDBConnectionGroup.getName());
+        connectionGroup.setConnection_group_id(mariaDBConnectionGroup.getConnectionGroupID());
+        connectionGroup.setParent_id(mariaDBConnectionGroup.getParentID());
+        connectionGroup.setConnection_group_name(mariaDBConnectionGroup.getName());
         
-        switch(MariaDBConnectionGroup.getType()) {
+        switch(mariaDBConnectionGroup.getType()) {
             case BALANCING :
                 connectionGroup.setType(MariaDBConstants.CONNECTION_GROUP_BALANCING);
                 break;

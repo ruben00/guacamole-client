@@ -40,70 +40,70 @@ public class MariaDBGuacamoleProperties {
     /**
      * The URL of the MariaDB server hosting the guacamole authentication tables.
      */
-    public static final StringGuacamoleProperty MariaDB_HOSTNAME = new StringGuacamoleProperty() {
+    public static final StringGuacamoleProperty MARIADB_HOSTNAME = new StringGuacamoleProperty() {
 
         @Override
-        public String getName() { return "MariaDB-hostname"; }
+        public String getName() { return "mariadb-hostname"; }
 
     };
 
     /**
      * The port of the MariaDB server hosting the guacamole authentication tables.
      */
-    public static final IntegerGuacamoleProperty MariaDB_PORT = new IntegerGuacamoleProperty() {
+    public static final IntegerGuacamoleProperty MARIADB_PORT = new IntegerGuacamoleProperty() {
 
         @Override
-        public String getName() { return "MariaDB-port"; }
+        public String getName() { return "mariadb-port"; }
 
     };
 
     /**
      * The name of the MariaDB database containing the guacamole authentication tables.
      */
-    public static final StringGuacamoleProperty MariaDB_DATABASE = new StringGuacamoleProperty() {
+    public static final StringGuacamoleProperty MARIADB_DATABASE = new StringGuacamoleProperty() {
 
         @Override
-        public String getName() { return "MariaDB-database"; }
+        public String getName() { return "mariadb-database"; }
 
     };
 
     /**
      * The username used to authenticate to the MariaDB database containing the guacamole authentication tables.
      */
-    public static final StringGuacamoleProperty MariaDB_USERNAME = new StringGuacamoleProperty() {
+    public static final StringGuacamoleProperty MARIADB_USERNAME = new StringGuacamoleProperty() {
 
         @Override
-        public String getName() { return "MariaDB-username"; }
+        public String getName() { return "mariadb-username"; }
 
     };
 
     /**
      * The password used to authenticate to the MariaDB database containing the guacamole authentication tables.
      */
-    public static final StringGuacamoleProperty MariaDB_PASSWORD = new StringGuacamoleProperty() {
+    public static final StringGuacamoleProperty MARIADB_PASSWORD = new StringGuacamoleProperty() {
 
         @Override
-        public String getName() { return "MariaDB-password"; }
+        public String getName() { return "mariadb-password"; }
 
     };
 
     /**
      * Whether or not multiple users accessing the same connection at the same time should be disallowed.
      */
-    public static final BooleanGuacamoleProperty MariaDB_DISALLOW_SIMULTANEOUS_CONNECTIONS = new BooleanGuacamoleProperty() {
+    public static final BooleanGuacamoleProperty MARIADB_DISALLOW_SIMULTANEOUS_CONNECTIONS = new BooleanGuacamoleProperty() {
 
         @Override
-        public String getName() { return "MariaDB-disallow-simultaneous-connections"; }
+        public String getName() { return "mariadb-disallow-simultaneous-connections"; }
 
     };
 
     /**
      * Whether or not the same user accessing the same connection or connection group at the same time should be disallowed.
      */
-    public static final BooleanGuacamoleProperty MariaDB_DISALLOW_DUPLICATE_CONNECTIONS = new BooleanGuacamoleProperty() {
+    public static final BooleanGuacamoleProperty MARIADB_DISALLOW_DUPLICATE_CONNECTIONS = new BooleanGuacamoleProperty() {
 
         @Override
-        public String getName() { return "MariaDB-disallow-duplicate-connections"; }
+        public String getName() { return "mariadb-disallow-duplicate-connections"; }
 
     };
     

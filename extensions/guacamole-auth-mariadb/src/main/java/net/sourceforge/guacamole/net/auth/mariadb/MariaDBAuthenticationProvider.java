@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package net.sourceforge.guacamole.net.auth.MariaDB;
+package net.sourceforge.guacamole.net.auth.mariadb;
 
 
 import com.google.inject.Binder;
@@ -108,13 +108,13 @@ public class MariaDBAuthenticationProvider implements AuthenticationProvider {
         final Properties myBatisProperties = new Properties();
         final Properties driverProperties = new Properties();
 
-        // Set the MariaDB properties for MyBatis.
+        // Set the mariadb properties for MyBatis.
         myBatisProperties.setProperty("mybatis.environment.id", "guacamole");
-        myBatisProperties.setProperty("JDBC.host", GuacamoleProperties.getRequiredProperty(MariaDBGuacamoleProperties.MariaDB_HOSTNAME));
-        myBatisProperties.setProperty("JDBC.port", String.valueOf(GuacamoleProperties.getRequiredProperty(MariaDBGuacamoleProperties.MariaDB_PORT)));
-        myBatisProperties.setProperty("JDBC.schema", GuacamoleProperties.getRequiredProperty(MariaDBGuacamoleProperties.MariaDB_DATABASE));
-        myBatisProperties.setProperty("JDBC.username", GuacamoleProperties.getRequiredProperty(MariaDBGuacamoleProperties.MariaDB_USERNAME));
-        myBatisProperties.setProperty("JDBC.password", GuacamoleProperties.getRequiredProperty(MariaDBGuacamoleProperties.MariaDB_PASSWORD));
+        myBatisProperties.setProperty("JDBC.host", GuacamoleProperties.getRequiredProperty(MariaDBGuacamoleProperties.MARIADB_HOSTNAME));
+        myBatisProperties.setProperty("JDBC.port", String.valueOf(GuacamoleProperties.getRequiredProperty(MariaDBGuacamoleProperties.MARIADB_PORT)));
+        myBatisProperties.setProperty("JDBC.schema", GuacamoleProperties.getRequiredProperty(MariaDBGuacamoleProperties.MARIADB_DATABASE));
+        myBatisProperties.setProperty("JDBC.username", GuacamoleProperties.getRequiredProperty(MariaDBGuacamoleProperties.MARIADB_USERNAME));
+        myBatisProperties.setProperty("JDBC.password", GuacamoleProperties.getRequiredProperty(MariaDBGuacamoleProperties.MARIADB_PASSWORD));
         myBatisProperties.setProperty("JDBC.autoCommit", "false");
         myBatisProperties.setProperty("mybatis.pooled.pingEnabled", "true");
         myBatisProperties.setProperty("mybatis.pooled.pingQuery", "SELECT 1");
@@ -122,7 +122,8 @@ public class MariaDBAuthenticationProvider implements AuthenticationProvider {
 
         // Set up Guice injector.
         injector = Guice.createInjector(
-            JdbcHelper.MariaDB,
+            //JdbcHelper.MariaDB, Dont think that a MariaDB JDBC Helper Exists
+            JdbcHelper.MySQL,
 
             new Module() {
                 @Override

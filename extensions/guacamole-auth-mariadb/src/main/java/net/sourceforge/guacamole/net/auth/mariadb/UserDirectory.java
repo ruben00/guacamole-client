@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package net.sourceforge.guacamole.net.auth.MariaDB;
+package net.sourceforge.guacamole.net.auth.mariadb;
 
 
 import com.google.common.base.Preconditions;
@@ -658,23 +658,23 @@ public class UserDirectory implements Directory<String, User> {
         if (!(object instanceof MariaDBUser))
             throw new GuacamoleUnsupportedException("User not from database.");
 
-        MariaDBUser MariaDBUser = (MariaDBUser) object;
+        MariaDBUser mariaDBUser = (MariaDBUser) object;
 
         // Validate permission to update this user is granted
         permissionCheckService.verifyUserAccess(currentUser,
-                MariaDBUser.getUserID(),
+                mariaDBUser.getUserID(),
                 MariaDBConstants.USER_UPDATE);
 
         // Update the user in the database
-        userService.updateUser(MariaDBUser);
+        userService.updateUser(mariaDBUser);
 
         // Update permissions in database
-        createPermissions(MariaDBUser.getUserID(), MariaDBUser.getNewPermissions());
-        removePermissions(MariaDBUser.getUserID(), MariaDBUser.getRemovedPermissions());
+        createPermissions(mariaDBUser.getUserID(), mariaDBUser.getNewPermissions());
+        removePermissions(mariaDBUser.getUserID(), mariaDBUser.getRemovedPermissions());
 
         // The appropriate permissions have been inserted and deleted, so
         // reset the new and removed permission sets.
-        MariaDBUser.resetPermissions();
+        mariaDBUser.resetPermissions();
 
     }
 

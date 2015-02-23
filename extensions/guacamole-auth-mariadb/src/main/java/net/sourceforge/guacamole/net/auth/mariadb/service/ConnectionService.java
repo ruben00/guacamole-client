@@ -90,13 +90,13 @@ public class ConnectionService {
      * Provider which creates MariaDBConnections.
      */
     @Inject
-    private Provider<MariaDBConnection> MariaDBConnectionProvider;
+    private Provider<MariaDBConnection> mariaDBConnectionProvider;
 
     /**
      * Provider which creates MariaDBGuacamoleSockets.
      */
     @Inject
-    private Provider<MariaDBGuacamoleSocket> MariaDBGuacamoleSocketProvider;
+    private Provider<MariaDBGuacamoleSocket> mariaDBGuacamoleSocketProvider;
 
     /**
      * Map of all currently active connections.
@@ -267,8 +267,8 @@ public class ConnectionService {
                     parameter.getParameter_value());
 
         // Create new MariaDBConnection from retrieved data
-        MariaDBConnection MariaDBConnection = MariaDBConnectionProvider.get();
-        MariaDBConnection.init(
+        MariaDBConnection mariaDBConnection = mariaDBConnectionProvider.get();
+        mariaDBConnection.init(
             connection.getConnection_id(),
             connection.getParent_id(),
             connection.getConnection_name(),
@@ -278,7 +278,7 @@ public class ConnectionService {
             currentUser
         );
 
-        return MariaDBConnection;
+        return mariaDBConnection;
 
     }
 
@@ -379,12 +379,12 @@ public class ConnectionService {
             // If the given connection is active, and multiple simultaneous
             // connections are not allowed, disallow connection
             if(GuacamoleProperties.getProperty(
-                    MariaDBGuacamoleProperties.MariaDB_DISALLOW_SIMULTANEOUS_CONNECTIONS, false)
+                    MariaDBGuacamoleProperties.MARIADB_DISALLOW_SIMULTANEOUS_CONNECTIONS, false)
                     && activeConnectionMap.isActive(connection.getConnectionID()))
                 throw new GuacamoleResourceConflictException("Cannot connect. This connection is in use.");
             
             if(GuacamoleProperties.getProperty(
-                    MariaDBGuacamoleProperties.MariaDB_DISALLOW_DUPLICATE_CONNECTIONS, true)
+                    MariaDBGuacamoleProperties.MARIADB_DISALLOW_DUPLICATE_CONNECTIONS, true)
                     && activeConnectionMap.isConnectionUserActive(connection.getConnectionID(), currentUser.getUserID()))
                 throw new GuacamoleClientTooManyException
                         ("Cannot connect. Connection already in use by this user.");
@@ -419,10 +419,10 @@ public class ConnectionService {
                     currentUser.getUserID(), connectionGroupID);
 
                 // Return new MariaDBGuacamoleSocket
-            MariaDBGuacamoleSocket MariaDBGuacamoleSocket = MariaDBGuacamoleSocketProvider.get();
-            MariaDBGuacamoleSocket.init(socket, historyID, connectionGroupID);
+            MariaDBGuacamoleSocket mariaDBGuacamoleSocket = mariaDBGuacamoleSocketProvider.get();
+            mariaDBGuacamoleSocket.init(socket, historyID, connectionGroupID);
                 
-            return MariaDBGuacamoleSocket;
+            return mariaDBGuacamoleSocket;
 
         }
 
@@ -474,17 +474,17 @@ public class ConnectionService {
      * Updates the connection in the database corresponding to the given
      * MariaDBConnection.
      *
-     * @param MariaDBConnection The MariaDBConnection to update (save) to the
+     * @param mariaDBConnection The MariaDBConnection to update (save) to the
      *                        database. This connection must already exist.
      */
-    public void updateConnection(MariaDBConnection MariaDBConnection) {
+    public void updateConnection(MariaDBConnection mariaDBConnection) {
 
         // Populate connection
         Connection connection = new Connection();
-        connection.setConnection_id(MariaDBConnection.getConnectionID());
-        connection.setParent_id(MariaDBConnection.getParentID());
-        connection.setConnection_name(MariaDBConnection.getName());
-        connection.setProtocol(MariaDBConnection.getConfiguration().getProtocol());
+        connection.setConnection_id(mariaDBConnection.getConnectionID());
+        connection.setParent_id(mariaDBConnection.getParentID());
+        connection.setConnection_name(mariaDBConnection.getName());
+        connection.setProtocol(mariaDBConnection.getConfiguration().getProtocol());
 
         // Update the connection in the database
         connectionDAO.updateByPrimaryKey(connection);

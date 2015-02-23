@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-package net.sourceforge.guacamole.net.auth.MariaDB;
+package net.sourceforge.guacamole.net.auth.mariadb;
 
 import java.util.Collections;
 import java.util.HashSet;

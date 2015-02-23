@@ -59,7 +59,7 @@ public class UserService {
      * Provider for creating users.
      */
     @Inject
-    private Provider<MariaDBUser> MariaDBUserProvider;
+    private Provider<MariaDBUser> mariaDBUserProvider;
 
     /**
      * Service for checking permissions.
@@ -91,9 +91,9 @@ public class UserService {
      *                            of the provided User.
      */
     public MariaDBUser toMariaDBUser(org.glyptodon.guacamole.net.auth.User user) throws GuacamoleException {
-        MariaDBUser MariaDBUser = MariaDBUserProvider.get();
-        MariaDBUser.init(user);
-        return MariaDBUser;
+        MariaDBUser mariaDBUser = mariaDBUserProvider.get();
+        mariaDBUser.init(user);
+        return mariaDBUser;
     }
 
     /**
@@ -106,10 +106,10 @@ public class UserService {
     private MariaDBUser toMariaDBUser(UserWithBLOBs user) {
 
         // Retrieve user from provider
-        MariaDBUser MariaDBUser = MariaDBUserProvider.get();
+        MariaDBUser mariaDBUser = mariaDBUserProvider.get();
 
         // Init with data from given database user
-        MariaDBUser.init(
+        mariaDBUser.init(
             user.getUser_id(),
             user.getUsername(),
             null,
@@ -117,7 +117,7 @@ public class UserService {
         );
 
         // Return new user
-        return MariaDBUser;
+        return mariaDBUser;
 
     }
 
@@ -301,21 +301,21 @@ public class UserService {
     /**
      * Updates the user in the database corresponding to the given MariaDBUser.
      *
-     * @param MariaDBUser The MariaDBUser to update (save) to the database. This
+     * @param mariaDBUser The MariaDBUser to update (save) to the database. This
      *                  user must already exist.
      */
-    public void updateUser(MariaDBUser MariaDBUser) {
+    public void updateUser(MariaDBUser mariaDBUser) {
 
         UserWithBLOBs user = new UserWithBLOBs();
-        user.setUser_id(MariaDBUser.getUserID());
-        user.setUsername(MariaDBUser.getUsername());
+        user.setUser_id(mariaDBUser.getUserID());
+        user.setUsername(mariaDBUser.getUsername());
 
         // Set password if specified
-        if (MariaDBUser.getPassword() != null) {
+        if (mariaDBUser.getPassword() != null) {
             byte[] salt = saltService.generateSalt();
             user.setPassword_salt(salt);
             user.setPassword_hash(
-                passwordService.createPasswordHash(MariaDBUser.getPassword(), salt));
+                passwordService.createPasswordHash(mariaDBUser.getPassword(), salt));
         }
 
         // Update the user in the database

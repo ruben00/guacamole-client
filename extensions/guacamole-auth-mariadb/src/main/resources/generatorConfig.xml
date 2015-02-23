@@ -31,7 +31,7 @@
         <!-- Allow selectByExample with RowBounds -->
         <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"/>
 
-        <!-- MariaDB JDBC driver class. -->
+        <!-- MySQL JDBC driver class. -->
         <jdbcConnection driverClass="org.mariadb.jdbc.Driver"
             connectionURL="jdbc:mariadb://127.0.0.1:3306"
             userId="${guacamole.database.user}"

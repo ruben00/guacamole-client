@@ -3,10 +3,10 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.glyptodon.guacamole</groupId>
-    <artifactId>guacamole-auth-MariaDB</artifactId>
+    <artifactId>guacamole-auth-mariadb</artifactId>
     <packaging>jar</packaging>
     <version>0.9.5</version>
-    <name>guacamole-auth-MariaDB</name>
+    <name>guacamole-auth-mariadb</name>
     <url>http://guac-dev.org/</url>
 
     <properties>
@@ -63,14 +63,14 @@
                     </execution>
                 </executions>
 
-                <!-- MariaDB Connector -->
+                <!-- MySQL Connector -->
                 <dependencies>
-					<dependency>
-						<groupId>org.mariadb.jdbc</groupId>
-						<artifactId>mariadb-java-client</artifactId>
-						<version>1.1.8</version>
-						</dependency>                
-					</dependencies>
+                    <dependency>
+  <groupId>org.mariadb.jdbc</groupId>
+  <artifactId>mariadb-java-client</artifactId>
+  <version>1.1.8</version>
+</dependency>
+                </dependencies>
 
             </plugin>
 
