@@ -122,8 +122,8 @@ public class MariaDBAuthenticationProvider implements AuthenticationProvider {
 
         // Set up Guice injector.
         injector = Guice.createInjector(
-            //JdbcHelper.MariaDB, Dont think that a MariaDB JDBC Helper Exists
-            JdbcHelper.MySQL,
+            JdbcHelper.MariaDB //Dont think that a MariaDB JDBC Helper Exists, so this project is dead for now
+            //JdbcHelper.MySQL,
 
             new Module() {
                 @Override
